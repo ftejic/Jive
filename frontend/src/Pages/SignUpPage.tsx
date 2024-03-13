@@ -5,6 +5,7 @@ function SignUpPage() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   
   return (
     <div className="SignUpPage flex lg:items-center min-h-screen bg-text">
@@ -33,6 +34,13 @@ function SignUpPage() {
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              className="outline-none border border-background text-background placeholder:text-lightGray px-3 py-2"
+            />
+            <input
+              type="confirmPassword"
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
               className="outline-none border border-background text-background placeholder:text-lightGray px-3 py-2"
             />
             <input
