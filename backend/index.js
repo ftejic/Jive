@@ -1,5 +1,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
+const cors = require("cors");
+const cookieParser = require("cookie-parser")
 const connectToDB = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
@@ -8,7 +10,14 @@ const app = express();
 const port = 5000;
 
 dotenv.config();
+
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true,
+}));
 app.use(express.json());
+app.use(cookieParser());
+
 connectToDB();
 
 app.get("/", (req, res) => {

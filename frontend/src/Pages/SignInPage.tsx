@@ -1,9 +1,44 @@
+import axios from "axios";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-function SignInPage() {
+function SignInPage(props: any) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+
+    if (!email || !password) {
+      alert("Please fill all the fields");
+      return;
+    }
+
+    try {
+      const { data } = await axios.post(
+        "http://localhost:5000/api/user/sign-in",
+        { email, password },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      props.setCookie("jive.session-token", data.sessionToken, {maxAge: 8 * 60 * 60});
+
+      alert("Login Successful");
+
+      setEmail("");
+      setPassword("");
+
+      navigate("/");
+    } catch (error) {
+      console.log(`Login Failed: ${error}`);
+    }
+  };
 
   return (
     <div className="SignInPage flex lg:items-center min-h-screen bg-text">
@@ -12,19 +47,19 @@ function SignInPage() {
           <h1 className="text-4xl font-bold mb-10 text-center text-background">
             Welcome Back
           </h1>
-          <form className="flex flex-col gap-5">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <input
               type="text"
               placeholder="Enter your email"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="outline-none border border-background text-background placeholder:text-lightGray px-3 py-2"
             />
             <input
               type="password"
               placeholder="Enter your password"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="outline-none border border-background text-background placeholder:text-lightGray px-3 py-2"
             />
             <input
