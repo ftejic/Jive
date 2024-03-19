@@ -1,6 +1,9 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import MainPanel from "../Components/MainPanel/MainPanel";
+import ChatWindow from "../Components/chatWindow/ChatWindow";
+
 
 interface User {
   _id: String;
@@ -9,8 +12,17 @@ interface User {
   image: String;
 }
 
-function HomePage(props: any) {
+interface UserContext {
+  user: User | null;
+  setUser: (user: User | null) => void;
+}
+
+export const UserContext = createContext<UserContext | null>(null);
+
+
+function HomePage() {
   const [user, setUser] = useState<User | null>(null);
+  const [visible, setVisible] = useState(true);
 
   const navigate = useNavigate();
 
@@ -34,7 +46,14 @@ function HomePage(props: any) {
     getUser();
   }, [navigate]);
 
-  return <div>{user?.username}</div>;
+  return (
+    <div className="HomePage max-w-screen-2xl h-screen mx-auto grid grid-cols-12">
+      <UserContext.Provider value={{user, setUser}}>
+        <MainPanel visible={visible} />
+        <ChatWindow visible={visible}/>
+      </UserContext.Provider>
+    </div>
+  );
 }
 
 export default HomePage;

@@ -18,8 +18,7 @@ const userSchema = mongoose.Schema(
     },
     image: {
       type: String,
-      required: true,
-      default: "https://icon-library.com/icon/username-icon-png-14.html.html",
+      required: false,
     },
   },
   { timeStamps: true }

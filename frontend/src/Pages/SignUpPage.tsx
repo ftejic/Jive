@@ -34,8 +34,6 @@ function SignUpPage() {
         }
       );
 
-      alert("Registration Successful");
-
       setUsername("");
       setEmail("");
       setPassword("");

@@ -29,8 +29,6 @@ function SignInPage(props: any) {
 
       props.setCookie("jive.session-token", data.sessionToken, {maxAge: 8 * 60 * 60});
 
-      alert("Login Successful");
-
       setEmail("");
       setPassword("");
 
