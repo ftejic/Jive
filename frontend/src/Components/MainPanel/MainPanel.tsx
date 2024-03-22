@@ -1,4 +1,6 @@
 import { Input } from "../ui/input";
+import { ScrollArea } from "../ui/scroll-area";
+import ChatCard from "./ChatCard";
 import Header from "./Header";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 
@@ -6,8 +8,8 @@ function MainPanel(props: any) {
   return (
     <div
       className={`${
-        props.visible ? "block" : "hidden"
-      } md:block col-start-1 col-end-13 md:col-end-5`}
+        props.visible ? "flex" : "hidden"
+      } md:flex flex-col col-start-1 col-end-13 md:col-end-5 max-h-screen`}
     >
       <Header />
       <form className="hidden md:block">
@@ -20,6 +22,24 @@ function MainPanel(props: any) {
           />
         </div>
       </form>
+      <ScrollArea className="h-full border">
+        <ChatCard />
+        <ChatCard />
+        <ChatCard />
+        <ChatCard />
+        <ChatCard />
+        <ChatCard />
+        <ChatCard />
+        <ChatCard />
+        <ChatCard />
+        <ChatCard />
+        <ChatCard />
+        <ChatCard />
+        <ChatCard />
+        <ChatCard />
+        <ChatCard />
+        <ChatCard />
+      </ScrollArea>
     </div>
   );
 }

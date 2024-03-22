@@ -63,6 +63,7 @@ function SignInPage(props: any) {
             <form
               onSubmit={form.handleSubmit(handleSubmit)}
               className="space-y-4"
+              autoComplete="off"
             >
               <FormField
                 control={form.control}
@@ -102,7 +103,7 @@ function SignInPage(props: any) {
             </form>
           </Form>
         </div>
-        <div className="flex justify-center gap-1 sm:border sm:border-border px-5 sm:py-5">
+        <div className="flex justify-center gap-1 sm:border px-5 sm:py-5">
           <p className="text-foreground">Don't have an account?</p>
           <Link to="/sign-up" className="font-medium text-muted-foreground">
             Sign Up

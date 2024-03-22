@@ -17,7 +17,7 @@ function Header() {
   const [searchVisible, setSearchVisible] = useState(true);
 
   return (
-    <div className="bg-muted p-3 h-16 flex items-center">
+    <div className="bg-muted p-3">
       <div
         className={`${
           searchVisible ? "hidden" : "flex"
@@ -43,7 +43,7 @@ function Header() {
           </DropdownMenu>
         </div>
       </div>
-      <div className={`${searchVisible ? "block" : "hidden"} md:hidden w-full`}>
+      <div className={`${searchVisible ? "block" : "hidden"} md:hidden w-full py-[2px]`}>
         <form>
           <div className="relative">
             <ArrowLeftIcon className="absolute w-5 h-5 top-2 left-3 text-muted-foreground" onClick={() => setSearchVisible(false)}/>

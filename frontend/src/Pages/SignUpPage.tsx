@@ -72,7 +72,7 @@ function SignUpPage() {
   return (
     <div className="SignUpPage flex lg:items-center min-h-screen">
       <div className="container max-w-md mx-auto flex flex-col sm:gap-5 mt-28 lg:mt-0">
-        <div className="sm:border sm:border-border px-5 py-5">
+        <div className="sm:border px-5 py-5">
           <h1 className="text-4xl font-bold mb-10 text-center text-foreground">
             Sign Up
           </h1>
@@ -80,6 +80,7 @@ function SignUpPage() {
             <form
               onSubmit={form.handleSubmit(handleSubmit)}
               className="space-y-4"
+              autoComplete="off"
             >
               <FormField
                 control={form.control}
