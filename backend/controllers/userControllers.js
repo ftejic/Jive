@@ -46,6 +46,9 @@ const authUser = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email });
 
   if (user && (await user.matchPasswords(password))) {
+
+    await Session.deleteOne({userId: user._id});
+
     const session = await createSession(user._id);
 
     if (session) {

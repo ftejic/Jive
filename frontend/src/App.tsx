@@ -3,16 +3,13 @@ import { CookiesProvider, useCookies } from "react-cookie";
 import HomePage from "./Pages/HomePage";
 import SignInPage from "./Pages/SignInPage";
 import SignUpPage from "./Pages/SignUpPage";
-import { createContext, useEffect } from "react";
-
 
 function App() {
-  const [cookie, setCookie] = useCookies(["jive.session-token"]); 
+  const [cookie, setCookie] = useCookies(["jive.session-token"]);
 
   return (
     <CookiesProvider>
       <div className="App text-lg bg-background">
-        
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route

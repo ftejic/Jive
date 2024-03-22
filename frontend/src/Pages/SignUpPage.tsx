@@ -1,28 +1,58 @@
-import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "../Components/ui/form";
+import { Input } from "../Components/ui/input";
+import { Button } from "../Components/ui/button";
 
 function SignUpPage() {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const navigate = useNavigate();
 
-  const navigate = useNavigate()
+  const formSchema = z
+    .object({
+      username: z.string().min(4, {
+        message: "Username must be at least 4 characters.",
+      }),
+      email: z.string().email({
+        message: "Email is not in valid form",
+      }),
+      password: z
+        .string()
+        .min(8, "Password must be at least 8 characters long")
+        .regex(
+          /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
+          {
+            message:
+              "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
+          }
+        ),
+      confirmPassword: z.string(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: "Passwords don't match",
+      path: ["confirmPassword"],
+    });
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      username: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+  });
 
-    if (!username || !email || !password || !confirmPassword) {
-      alert("Please fill all the fields");
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      alert("Passwords do not match");
-      return;
-    }
-
+  async function handleSubmit(values: z.infer<typeof formSchema>) {
+    const { username, email, password } = values;
     try {
       await axios.post(
         "http://localhost:5000/api/user/sign-up",
@@ -33,65 +63,97 @@ function SignUpPage() {
           },
         }
       );
-
-      setUsername("");
-      setEmail("");
-      setPassword("");
-      setConfirmPassword("");
-
       navigate("/sign-in");
-      
     } catch (error) {
       console.log(`Signup Failed: ${error}`);
     }
-  };
+  }
 
   return (
-    <div className="SignUpPage flex lg:items-center min-h-screen bg-text">
+    <div className="SignUpPage flex lg:items-center min-h-screen">
       <div className="container max-w-md mx-auto flex flex-col sm:gap-5 mt-28 lg:mt-0">
-        <div className="sm:border sm:border-lightGray px-5 py-5">
-          <h1 className="text-4xl font-bold mb-10 text-center text-background">
+        <div className="sm:border sm:border-border px-5 py-5">
+          <h1 className="text-4xl font-bold mb-10 text-center text-foreground">
             Sign Up
           </h1>
-          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-            <input
-              type="text"
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="outline-none border border-background text-background placeholder:text-lightGray px-3 py-2"
-            />
-            <input
-              type="text"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="outline-none border border-background text-background placeholder:text-lightGray px-3 py-2"
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="outline-none border border-background text-background placeholder:text-lightGray px-3 py-2"
-            />
-            <input
-              type="password"
-              placeholder="Confirm Password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="outline-none border border-background text-background placeholder:text-lightGray px-3 py-2"
-            />
-            <input
-              type="submit"
-              value="Sign Up"
-              className="button-primary cursor-pointer"
-            />
-          </form>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(handleSubmit)}
+              className="space-y-4"
+            >
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder="Enter your username"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder="Enter your email"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="Create strong password"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="Confirm Password"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button type="submit" className="w-full">
+                Sign Up
+              </Button>
+            </form>
+          </Form>
         </div>
-        <div className="flex justify-center gap-1 sm:border sm:border-lightGray px-5 sm:py-5">
-          <p className="text-background">Already have an account?</p>
-          <Link to="/sign-in" className="font-medium text-secondary">
+        <div className="flex justify-center gap-1 sm:border sm:border-border px-5 sm:py-5">
+          <p className="text-foreground">Already have an account?</p>
+          <Link to="/sign-in" className="text-muted-foreground">
             Sign In
           </Link>
         </div>

@@ -2,37 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #170e1b;
-  --text: #efe7f2;
-  --primary: #c5a8d1;
-  --secondary: #506636;
-  --accent: #6cb182;
-  --light-gray: #bfbfbf;
-  --dark-gray: #333333;
+
+@layer base {
+  :root {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9;
+  }
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
 }
 
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-.button-primary {
-  border: 1px solid var(--background);
-  background: var(--primary);
-  outline: none;
-  padding: 8px 12px;
-  color: var(--background);
-  font-weight: 500;
-  transition: all ease-in-out .2s;
-}
-
-.button-primary:hover{
-  background: var(--text);
-}

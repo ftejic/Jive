@@ -1,56 +1,59 @@
-import { useContext, useState } from "react";
 import { UserContext } from "../../Pages/HomePage";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { DotsVerticalIcon, MagnifyingGlassIcon, ArrowLeftIcon } from "@radix-ui/react-icons";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { useContext, useState } from "react";
 import {
-  faEllipsisVertical,
-  faMagnifyingGlass,
-  faArrowLeft,
-} from "@fortawesome/free-solid-svg-icons";
-import SearchBar from "./SearchBar";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { Input } from "../ui/input";
 
 function Header() {
   const contextValue = useContext(UserContext);
-  const [searchBarVisible, setSearchBarVisible] = useState(false);
+  const avatarImage = contextValue?.user?.image;
+  const avatarFallback = contextValue?.user?.username[0];
+  const [searchVisible, setSearchVisible] = useState(true);
 
   return (
-    <div className="Header p-3">
+    <div className="bg-muted p-3 h-16 flex items-center">
       <div
         className={`${
-          searchBarVisible ? "hidden" : "flex"
-        } md:flex justify-between items-center`}
+          searchVisible ? "hidden" : "flex"
+        } md:flex items-center justify-between w-full`}
       >
-        <img
-          src={
-            contextValue?.user?.image
-              ? `${contextValue?.user?.image}`
-              : "./images/profile-circle.svg"
-          }
-          alt="profile picture"
-          className="w-8 rounded-full"
-        />
-        <div className="flex gap-5">
-          <FontAwesomeIcon
-            icon={faMagnifyingGlass}
-            className="h-5 text-text md:hidden"
-            onClick={() => setSearchBarVisible(true)}
-          />
-          <FontAwesomeIcon
-            icon={faEllipsisVertical}
-            className="h-5 text-text"
-          />
+        <Avatar>
+          <AvatarImage src={`${avatarImage}`} />
+          <AvatarFallback className="bg-muted-foreground">
+            {avatarFallback}
+          </AvatarFallback>
+        </Avatar>
+        <div className="flex gap-3">
+          <MagnifyingGlassIcon className="md:hidden w-5 h-5 text-muted-foreground" onClick={() => setSearchVisible(true)}/>
+          <DropdownMenu>
+            <DropdownMenuTrigger className="outline-none">
+              <DotsVerticalIcon className="h-5 w-5 text-foreground" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem>New Group</DropdownMenuItem>
+              <DropdownMenuItem>Settings</DropdownMenuItem>
+              <DropdownMenuItem>Log Out</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
-      <div
-        className={`${
-          !searchBarVisible ? "hidden" : "flex"
-        } items-center gap-3 md:hidden`}
-      >
-        <FontAwesomeIcon
-          icon={faArrowLeft}
-          className="h-5 text-text"
-          onClick={() => setSearchBarVisible(false)}
-        />
-        <SearchBar />
+      <div className={`${searchVisible ? "block" : "hidden"} md:hidden w-full`}>
+        <form>
+          <div className="relative">
+            <ArrowLeftIcon className="absolute w-5 h-5 top-2 left-3 text-muted-foreground" onClick={() => setSearchVisible(false)}/>
+            <Input
+              type="search"
+              placeholder="Search or start new chat"
+              className="pl-11 lg:pl-14 shadow-none focus-visible:ring-0"
+            />
+          </div>
+        </form>
       </div>
     </div>
   );

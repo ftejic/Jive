@@ -2,7 +2,7 @@ import axios from "axios";
 import { createContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MainPanel from "../Components/MainPanel/MainPanel";
-import ChatWindow from "../Components/chatWindow/ChatWindow";
+import ChatWindow from "../Components/ChatWindow/ChatWindow";
 
 
 interface User {
@@ -49,7 +49,7 @@ function HomePage() {
   return (
     <div className="HomePage max-w-screen-2xl h-screen mx-auto grid grid-cols-12">
       <UserContext.Provider value={{user, setUser}}>
-        <MainPanel visible={visible} />
+        <MainPanel visible={visible}/>
         <ChatWindow visible={visible}/>
       </UserContext.Provider>
     </div>

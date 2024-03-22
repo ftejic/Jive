@@ -1,25 +1,25 @@
+import { Input } from "../ui/input";
 import Header from "./Header";
-import SearchBar from "./SearchBar";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 
-interface Props {
-  visible: boolean;
-}
-
-function MainPanel(props: Props) {
+function MainPanel(props: any) {
   return (
     <div
-      className={`
-      ${props.visible ? "block" : "hidden"} md:block
-       h-full col-start-1 col-end-13 md:col-end-6 lg:col-end-5 md:border-r border-lightGray
-      `}
+      className={`${
+        props.visible ? "block" : "hidden"
+      } md:block col-start-1 col-end-13 md:col-end-5`}
     >
       <Header />
-      <div className="hidden md:flex items-center p-3 border-y border-lightGray">
-        <FontAwesomeIcon icon={faMagnifyingGlass} className="h-4 text-text" />
-        <SearchBar />
-      </div>
+      <form className="hidden md:block">
+        <div className="relative px-3 py-3">
+          <MagnifyingGlassIcon className="absolute w-5 h-5 top-5 left-6 text-muted-foreground" />
+          <Input
+            type="search"
+            placeholder="Search or start new chat"
+            className="pl-11 lg:pl-14"
+          />
+        </div>
+      </form>
     </div>
   );
 }
