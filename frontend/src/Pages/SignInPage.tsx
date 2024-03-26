@@ -12,9 +12,11 @@ import {
 } from "../Components/ui/form";
 import { Input } from "../Components/ui/input";
 import { Button } from "../Components/ui/button";
+import { ChatState } from "../Context/ChatProvider";
 
-function SignInPage(props: any) {
+function SignInPage() {
   const navigate = useNavigate();
+  const chatState = ChatState();
 
   const formSchema = z.object({
     email: z.string().email({
@@ -44,7 +46,7 @@ function SignInPage(props: any) {
         }
       );
 
-      props.setCookie("jive.session-token", data.sessionToken, {
+      chatState?.setCookie("jive.session-token", data.sessionToken, {
         maxAge: 8 * 60 * 60,
       });
 

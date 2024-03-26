@@ -1,7 +1,10 @@
-import { UserContext } from "../../Pages/HomePage";
-import { DotsVerticalIcon, MagnifyingGlassIcon, ArrowLeftIcon } from "@radix-ui/react-icons";
+import {
+  DotsVerticalIcon,
+  MagnifyingGlassIcon,
+  ArrowLeftIcon,
+} from "@radix-ui/react-icons";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,12 +12,31 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Input } from "../ui/input";
+import { ChatState } from "..//../Context/ChatProvider";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function Header() {
-  const contextValue = useContext(UserContext);
-  const avatarImage = contextValue?.user?.image;
-  const avatarFallback = contextValue?.user?.username[0];
+  const chatState = ChatState();
+  const navigate = useNavigate();
+  const avatarImage = chatState?.user?.image;
+  const avatarFallback = chatState?.user?.username[0];
   const [searchVisible, setSearchVisible] = useState(false);
+
+  const logout = async () => {
+    try {
+      await axios.delete("http://localhost:5000/api/user/sign-out", {
+        withCredentials: true,
+      });
+    } catch (error) {
+      console.log(`Log out failed: ${error}`);
+    } finally {
+      chatState?.removeCookie("jive.session-token");
+      chatState?.setUser(null);
+      chatState?.setSelectedChat(null);
+      navigate("/sign-in");
+    }
+  };
 
   return (
     <div className="bg-muted p-3">
@@ -31,7 +53,10 @@ function Header() {
         </Avatar>
         <h1 className="block md:hidden text-2xl font-bold py-1">Jive</h1>
         <div className="flex gap-3">
-          <MagnifyingGlassIcon className="md:hidden w-5 h-5 text-muted-foreground" onClick={() => setSearchVisible(true)}/>
+          <MagnifyingGlassIcon
+            className="md:hidden w-5 h-5 text-muted-foreground"
+            onClick={() => setSearchVisible(true)}
+          />
           <DropdownMenu>
             <DropdownMenuTrigger className="outline-none">
               <DotsVerticalIcon className="h-5 w-5 text-foreground" />
@@ -39,15 +64,24 @@ function Header() {
             <DropdownMenuContent>
               <DropdownMenuItem>New Group</DropdownMenuItem>
               <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuItem>Log Out</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => logout()}>
+                Log Out
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
       </div>
-      <div className={`${searchVisible ? "block" : "hidden"} md:hidden w-full py-[2px]`}>
+      <div
+        className={`${
+          searchVisible ? "block" : "hidden"
+        } md:hidden w-full py-[2px]`}
+      >
         <form>
           <div className="relative">
-            <ArrowLeftIcon className="absolute w-5 h-5 top-2 left-3 text-muted-foreground" onClick={() => setSearchVisible(false)}/>
+            <ArrowLeftIcon
+              className="absolute w-5 h-5 top-2 left-3 text-muted-foreground"
+              onClick={() => setSearchVisible(false)}
+            />
             <Input
               type="search"
               placeholder="Search or start new chat"

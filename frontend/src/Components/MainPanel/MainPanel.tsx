@@ -1,6 +1,6 @@
 import { Input } from "../ui/input";
 import { ScrollArea } from "../ui/scroll-area";
-import ChatCard from "./ChatCard";
+import Chats from "./Chats";
 import Header from "./Header";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 
@@ -23,22 +23,7 @@ function MainPanel(props: any) {
         </div>
       </form>
       <ScrollArea className="h-full border">
-        <ChatCard />
-        <ChatCard />
-        <ChatCard />
-        <ChatCard />
-        <ChatCard />
-        <ChatCard />
-        <ChatCard />
-        <ChatCard />
-        <ChatCard />
-        <ChatCard />
-        <ChatCard />
-        <ChatCard />
-        <ChatCard />
-        <ChatCard />
-        <ChatCard />
-        <ChatCard />
+        <Chats />
       </ScrollArea>
     </div>
   );
