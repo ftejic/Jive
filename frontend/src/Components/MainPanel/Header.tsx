@@ -14,7 +14,7 @@ function Header() {
   const contextValue = useContext(UserContext);
   const avatarImage = contextValue?.user?.image;
   const avatarFallback = contextValue?.user?.username[0];
-  const [searchVisible, setSearchVisible] = useState(true);
+  const [searchVisible, setSearchVisible] = useState(false);
 
   return (
     <div className="bg-muted p-3">
@@ -23,12 +23,13 @@ function Header() {
           searchVisible ? "hidden" : "flex"
         } md:flex items-center justify-between w-full`}
       >
-        <Avatar>
+        <Avatar className="hidden md:block">
           <AvatarImage src={`${avatarImage}`} />
           <AvatarFallback className="bg-muted-foreground">
             {avatarFallback}
           </AvatarFallback>
         </Avatar>
+        <h1 className="block md:hidden text-2xl font-bold py-1">Jive</h1>
         <div className="flex gap-3">
           <MagnifyingGlassIcon className="md:hidden w-5 h-5 text-muted-foreground" onClick={() => setSearchVisible(true)}/>
           <DropdownMenu>

@@ -11,6 +11,16 @@ const createSession = asyncHandler(async (userId) => {
   return session;
 });
 
+const getUsers = asyncHandler(async (req, res) => {
+  const email = req.query.email ? { email: req.query.email } : {};
+
+  const users = await User.find(email)
+    .find({ _id: { $ne: req.user._id } })
+    .select("-password");
+
+  res.send(users);
+});
+
 const registerUser = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
 
@@ -46,8 +56,7 @@ const authUser = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email });
 
   if (user && (await user.matchPasswords(password))) {
-
-    await Session.deleteOne({userId: user._id});
+    await Session.deleteOne({ userId: user._id });
 
     const session = await createSession(user._id);
 
@@ -88,4 +97,4 @@ const checkAuth = asyncHandler(async (req, res) => {
   res.status(200).json({ user, message: "authorized" });
 });
 
-module.exports = { registerUser, authUser, checkAuth };
+module.exports = { registerUser, authUser, checkAuth, getUsers };
