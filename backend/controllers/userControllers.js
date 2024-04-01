@@ -100,15 +100,14 @@ const checkAuth = asyncHandler(async (req, res) => {
 const signOut = asyncHandler(async (req, res) => {
   const sessionToken = req.cookies["jive.session-token"];
 
-  if(sessionToken){
+  if (sessionToken) {
     try {
-    await Session.findByIdAndDelete({ _id: sessionToken });
-    res.status(200).send({message: "Signed out"});
-  } catch (error) {
-    res.status(400).send({message: "Sign out failed"});
+      await Session.findByIdAndDelete({ _id: sessionToken });
+      res.status(200).send({ message: "Signed out" });
+    } catch (error) {
+      res.status(400).send({ message: "Sign out failed" });
+    }
   }
-  }
-
 });
 
-module.exports = { registerUser, authUser, checkAuth, getUsers, signOut };
+module.exports = { getUsers, registerUser, authUser, checkAuth, signOut };

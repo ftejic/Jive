@@ -25,11 +25,11 @@ const accessChat = asyncHandler(async (req, res) => {
     select: "name image email",
   });
 
-  if (chat.length > 0) {
-    res.send(chat[0]);
+  if (chat.length !== 0) {
+    return res.send(chat[0]);
   } else {
     var chatData = {
-      chatName: "sender",
+      chatName: null,
       isGroupChat: false,
       users: [req.user._id, userId],
     };
@@ -50,7 +50,7 @@ const accessChat = asyncHandler(async (req, res) => {
 
 const getChats = asyncHandler(async (req, res) => {
   try {
-    let chats = Chat.find({
+    let chats = await Chat.find({
       users: { $elemMatch: { $eq: req.user._id } },
     })
       .populate("users", "-password")
@@ -111,13 +111,11 @@ const deleteGroupChat = asyncHandler(async (req, res) => {
 
   try {
     await Chat.findByIdAndDelete(chatId);
-    res.status(200).send({message: "Group deleted"});
+    res.status(200).send({ message: "Group deleted" });
   } catch (error) {
     res.status(400);
     throw new Error(error.message);
   }
-  
-
 });
 
 const renameGroup = asyncHandler(async (req, res) => {
@@ -181,6 +179,48 @@ const removeFromGroup = asyncHandler(async (req, res) => {
   }
 });
 
+const search = asyncHandler(async (req, res) => {
+  const searchTerm = req.body.searchTerm;
+
+  try {
+    const privateChatUser = await User.findOne({
+      username: { $regex: searchTerm, $options: "i" },
+    });
+
+    let chats = await Chat.find({
+      $or: [
+        { chatName: { $regex: searchTerm, $options: "i" } },
+        {
+          $and: [
+            { users: { $elemMatch: { $eq: req.user._id } } },
+            {
+              users: {
+                $elemMatch: { $ne: req.user._id, $eq: privateChatUser?._id },
+              },
+            },
+          ],
+        },
+      ],
+    })
+      .populate("users", "-password")
+      .populate("groupAdmin", "-password")
+      .populate("latestMessage")
+      .sort({ updatedAt: -1 });
+
+    chats = await User.populate(chats, {
+      path: "latestMessage.sender",
+      select: "name image email",
+    });
+
+    const user = await User.findOne({ email: searchTerm });
+
+    res.status(200).json({ chats, user });
+  } catch (error) {
+    res.status(400);
+    throw new Error(error.message);
+  }
+});
+
 module.exports = {
   accessChat,
   getChats,
@@ -188,5 +228,6 @@ module.exports = {
   deleteGroupChat,
   renameGroup,
   addToGroup,
-  removeFromGroup
+  removeFromGroup,
+  search,
 };

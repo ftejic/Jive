@@ -16,7 +16,7 @@ import { ChatState } from "..//../Context/ChatProvider";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-function Header() {
+function Header(props: any) {
   const chatState = ChatState();
   const navigate = useNavigate();
   const avatarImage = chatState?.user?.image;
@@ -86,6 +86,8 @@ function Header() {
               type="search"
               placeholder="Search or start new chat"
               className="pl-11 lg:pl-14 shadow-none focus-visible:ring-0"
+              value={props.searchValue}
+              onChange={(e) => props.setSearchValue(e.target.value)}
             />
           </div>
         </form>

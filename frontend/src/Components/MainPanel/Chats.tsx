@@ -4,26 +4,6 @@ import axios from "axios";
 import { getSender } from "../../config/chatLogics";
 import { ChatState } from "../../Context/ChatProvider";
 
-// interface User {
-//   _id: string;
-//   email: string;
-//   username: string;
-//   image: string;
-// }
-
-// interface Message {
-//   sender: User;
-//   content: string;
-// }
-
-// interface Chat {
-//   _id: string;
-//   chatName: string;
-//   isGroupChat: boolean;
-//   users: User[];
-//   latestMessage: Message;
-// }
-
 function Chats() {
   const chatState = ChatState();
 
