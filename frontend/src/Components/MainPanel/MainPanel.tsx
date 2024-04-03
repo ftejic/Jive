@@ -51,6 +51,8 @@ function MainPanel(props: any) {
             }
           );
           setSearchData(res.data);
+        } else {
+          setSearchData(null);
         }
       } catch (error) {
         console.log(error);
@@ -80,7 +82,7 @@ function MainPanel(props: any) {
       </form>
       <ScrollArea className="h-full border">
         {searchValue.length > 0 ? (
-          <SearchResults searchData={searchData} />
+          <SearchResults searchData={searchData} setSearchValue={setSearchValue}/>
         ) : (
           <Chats />
         )}

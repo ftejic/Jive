@@ -29,6 +29,7 @@ interface Props {
     chats: Chat[] | null;
     user: User | null;
   } | null;
+  setSearchValue: any;
 }
 
 function SearchResults(props: Props) {
@@ -36,7 +37,7 @@ function SearchResults(props: Props) {
 
   const createChat = async (userId: string | undefined) => {
     try {
-      const res = await axios.post(
+      const { data } : {data: Chat} = await axios.post(
         "http://localhost:5000/api/chat/",
         { userId },
         {
@@ -45,10 +46,18 @@ function SearchResults(props: Props) {
         }
       );
 
-      chatState?.setSelectedChat({
-        ...res.data,
-        chatName: getSender(chatState?.user, res.data.users),
+      chatState?.setChats((prev: Chat[]) => {
+        if(!prev.some(chat => chat._id === data._id)) {
+          return [...prev, data];
+        } else {
+          return prev;
+        }
       });
+      chatState?.setSelectedChat({
+        ...data,
+        chatName: getSender(chatState?.user, data.users).username,
+      });
+      props.setSearchValue("");
     } catch (error) {
       console.log(error);
     }
@@ -66,16 +75,17 @@ function SearchResults(props: Props) {
                   ? chatState?.setSelectedChat(chat)
                   : chatState?.setSelectedChat({
                       ...chat,
-                      chatName: getSender(chatState?.user, chat.users),
+                      chatName: getSender(chatState?.user, chat.users).username,
                     })
               }
+              className="cursor-pointer"
             >
               <ChatCard
                 _id={chat._id}
                 chatName={
                   chat.isGroupChat
                     ? chat.chatName
-                    : getSender(chatState?.user, chat.users)
+                    : getSender(chatState?.user, chat.users).username
                 }
                 latestMessage={
                   chat.latestMessage ? chat.latestMessage.content : ""

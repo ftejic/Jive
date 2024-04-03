@@ -23,11 +23,11 @@ interface Chat {
 
 interface ChatContextType {
   user: User | null;
-  setUser: (user: User | null) => void;
+  setUser: any
   selectedChat: Chat | null;
-  setSelectedChat: (selectedChat: Chat | null) => void;
+  setSelectedChat: any;
   chats: Chat[] | null;
-  setChats: (chats: Chat[] | null) => void;
+  setChats: any;
   cookie: any;
   setCookie: any;
   removeCookie: any;

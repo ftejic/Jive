@@ -33,16 +33,17 @@ function Chats() {
                 ? chatState.setSelectedChat(chat)
                 : chatState.setSelectedChat({
                     ...chat,
-                    chatName: getSender(chatState?.user, chat.users),
+                    chatName: getSender(chatState?.user, chat.users).username,
                   });
             }}
+            className="cursor-pointer"
           >
             <ChatCard
               _id={chat._id}
               chatName={
                 chat.isGroupChat
                   ? chat.chatName
-                  : getSender(chatState?.user, chat.users)
+                  : getSender(chatState?.user, chat.users).username
               }
               latestMessage={
                 chat.latestMessage ? chat.latestMessage.content : ""
