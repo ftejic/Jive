@@ -100,7 +100,7 @@ function SearchResults(props: Props) {
             onClick={() => createChat(props.searchData?.user?._id)}
             className="cursor-pointer"
           >
-            <UserCard user={props.searchData.user} />
+            <UserCard user={props.searchData.user} textVisible={true}/>
           </div>
         </div>
       ) : (

@@ -9,6 +9,7 @@ interface User {
 
 interface Props {
   user: User;
+  textVisible?: boolean;
 }
 
 function UserCard(props: Props) {
@@ -21,7 +22,10 @@ function UserCard(props: Props) {
       <div className="w-full border-b py-5">
         <div className="flex flex-col gap-1">
           <p className="text-sm font-medium leading-none">{props.user.username}</p>
-          <p className="text-sm text-muted-foreground">Start a chat</p>
+          {
+            props.textVisible && <p className="text-sm text-muted-foreground">Start a chat</p>
+          }
+          
         </div>
       </div>
     </div>

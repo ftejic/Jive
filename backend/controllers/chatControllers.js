@@ -77,12 +77,11 @@ const createGroupChat = asyncHandler(async (req, res) => {
 
 
   const users = JSON.parse(req.body.users);
+  users.push(req.user); // add loged in user
 
   if (users.length < 2) {
     return res.status(400).send("Group should have at least 2 members");
   }
-
-  users.push(req.user); // add loged in user
 
   try {
     const groupChat = await Chat.create({

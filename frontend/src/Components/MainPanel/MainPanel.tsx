@@ -6,6 +6,7 @@ import Header from "./Header";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import axios from "axios";
 import SearchResults from "./SearchResults";
+import CreateGroupSheet from "./CreateGroupSheet";
 
 interface User {
   _id: string;
@@ -35,6 +36,7 @@ interface SearchData {
 function MainPanel(props: any) {
   const [searchValue, setSearchValue] = useState("");
   const [searchData, setSearchData] = useState<SearchData | null>(null);
+  const [isCreateGroupSheetOpen, setIsCreateGroupSheetOpen] = useState(false);
 
   useEffect(() => {
     const getData = async () => {
@@ -67,7 +69,11 @@ function MainPanel(props: any) {
         props.visible ? "flex" : "hidden"
       } md:flex flex-col col-start-1 col-end-13 md:col-end-5 max-h-screen`}
     >
-      <Header searchValue={searchValue} setSearchValue={setSearchValue} />
+      <Header
+        searchValue={searchValue}
+        setSearchValue={setSearchValue}
+        setIsCreateGroupSheetOpen={setIsCreateGroupSheetOpen}
+      />
       <form className="hidden md:block">
         <div className="relative px-3 py-3">
           <MagnifyingGlassIcon className="absolute w-5 h-5 top-5 left-6 text-muted-foreground" />
@@ -82,11 +88,18 @@ function MainPanel(props: any) {
       </form>
       <ScrollArea className="h-full border">
         {searchValue.length > 0 ? (
-          <SearchResults searchData={searchData} setSearchValue={setSearchValue}/>
+          <SearchResults
+            searchData={searchData}
+            setSearchValue={setSearchValue}
+          />
         ) : (
           <Chats />
         )}
       </ScrollArea>
+      <CreateGroupSheet
+        isCreateGroupSheetOpen={isCreateGroupSheetOpen}
+        setIsCreateGroupSheetOpen={setIsCreateGroupSheetOpen}
+      />
     </div>
   );
 }
