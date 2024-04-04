@@ -14,8 +14,8 @@ interface Props {
 
 function UserCard(props: Props) {
   return (
-    <div className="flex items-center gap-4 px-3">
-      <Avatar className="h-10 w-10 xl:h-14 xl:w-14">
+    <div className="flex items-center gap-4 px-4">
+      <Avatar className={`h-10 w-10 xl:h-${props.textVisible ? '14' : '10'} xl:w-${props.textVisible ? '14' : '10'}`}>
         <AvatarImage src={props.user.image} alt="Avatar" />
         <AvatarFallback>{props.user.username[0]}</AvatarFallback>
       </Avatar>

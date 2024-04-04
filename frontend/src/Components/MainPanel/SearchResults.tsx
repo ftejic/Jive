@@ -37,7 +37,7 @@ function SearchResults(props: Props) {
 
   const createChat = async (userId: string | undefined) => {
     try {
-      const { data } : {data: Chat} = await axios.post(
+      const { data }: { data: Chat } = await axios.post(
         "http://localhost:5000/api/chat/",
         { userId },
         {
@@ -46,8 +46,10 @@ function SearchResults(props: Props) {
         }
       );
 
+      const sender = getSender(chatState?.user, data.users);
+
       chatState?.setChats((prev: Chat[]) => {
-        if(!prev.some(chat => chat._id === data._id)) {
+        if (!prev.some((chat) => chat._id === data._id)) {
           return [...prev, data];
         } else {
           return prev;
@@ -55,7 +57,8 @@ function SearchResults(props: Props) {
       });
       chatState?.setSelectedChat({
         ...data,
-        chatName: getSender(chatState?.user, data.users).username,
+        chatName: sender.username,
+        sender,
       });
       props.setSearchValue("");
     } catch (error) {
@@ -67,32 +70,32 @@ function SearchResults(props: Props) {
     <div>
       {props.searchData?.chats?.length !== 0 ? (
         <div>
-          {props.searchData?.chats?.map((chat) => (
-            <div
-              key={chat._id}
-              onClick={() =>
-                chat.isGroupChat
-                  ? chatState?.setSelectedChat(chat)
-                  : chatState?.setSelectedChat({
-                      ...chat,
-                      chatName: getSender(chatState?.user, chat.users).username,
-                    })
-              }
-              className="cursor-pointer"
-            >
-              <ChatCard
-                _id={chat._id}
-                chatName={
+          {props.searchData?.chats?.map((chat) => {
+            const sender = getSender(chatState?.user, chat.users);
+            return (
+              <div
+                key={chat._id}
+                onClick={() =>
                   chat.isGroupChat
-                    ? chat.chatName
-                    : getSender(chatState?.user, chat.users).username
+                    ? chatState?.setSelectedChat(chat)
+                    : chatState?.setSelectedChat({
+                        ...chat,
+                        chatName: sender.username,
+                        sender,
+                      })
                 }
-                latestMessage={
-                  chat.latestMessage ? chat.latestMessage.content : ""
-                }
-              />
-            </div>
-          ))}
+                className="cursor-pointer"
+              >
+                <ChatCard
+                  _id={chat._id}
+                  chatName={chat.isGroupChat ? chat.chatName : sender.username}
+                  latestMessage={
+                    chat.latestMessage ? chat.latestMessage.content : ""
+                  }
+                />
+              </div>
+            );
+          })}
         </div>
       ) : props.searchData?.user ? (
         <div>
@@ -100,7 +103,7 @@ function SearchResults(props: Props) {
             onClick={() => createChat(props.searchData?.user?._id)}
             className="cursor-pointer"
           >
-            <UserCard user={props.searchData.user} textVisible={true}/>
+            <UserCard user={props.searchData.user} textVisible={true} />
           </div>
         </div>
       ) : (

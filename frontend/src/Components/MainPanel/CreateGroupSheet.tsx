@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import {
   Sheet,
-  SheetClose,
   SheetContent,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
 } from "../ui/sheet";
@@ -196,7 +194,7 @@ function CreateGroupSheet(props: Props) {
                         }
                       });
                     }}
-                    className="mb-4"
+                    className="mb-4 cursor-pointer"
                   >
                     <UserCard user={getSender(chatState?.user, chat.users)} />
                   </div>

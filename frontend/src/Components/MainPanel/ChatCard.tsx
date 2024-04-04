@@ -17,7 +17,7 @@ interface Props {
 function ChatCard(props: Props) {
 
   return (
-    <div className="flex items-center gap-4 px-3">
+    <div className="flex items-center gap-4 px-4">
       <Avatar className="h-10 w-10 xl:h-14 xl:w-14">
         <AvatarImage src={props.sender?.image} alt="Avatar" />
         <AvatarFallback>{props.chatName[0]}</AvatarFallback>

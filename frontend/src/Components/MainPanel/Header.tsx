@@ -19,8 +19,6 @@ import { useNavigate } from "react-router-dom";
 function Header(props: any) {
   const chatState = ChatState();
   const navigate = useNavigate();
-  const avatarImage = chatState?.user?.image;
-  const avatarFallback = chatState?.user?.username[0];
   const [searchVisible, setSearchVisible] = useState(false);
 
   const logout = async () => {
@@ -39,16 +37,16 @@ function Header(props: any) {
   };
 
   return (
-    <div className="bg-muted p-3">
+    <div className="bg-muted py-3 px-4">
       <div
         className={`${
           searchVisible ? "hidden" : "flex"
         } md:flex items-center justify-between w-full`}
       >
         <Avatar className="hidden md:block">
-          <AvatarImage src={`${avatarImage}`} />
+          <AvatarImage src={chatState?.user?.image} />
           <AvatarFallback className="bg-muted-foreground">
-            {avatarFallback}
+            {chatState?.user?.username[0]}
           </AvatarFallback>
         </Avatar>
         <h1 className="block md:hidden text-2xl font-bold py-1">Jive</h1>

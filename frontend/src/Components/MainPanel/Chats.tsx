@@ -29,12 +29,14 @@ function Chats() {
           <div
             key={chat._id}
             onClick={() => {
+              const sender = getSender(chatState?.user, chat.users);
               chat.isGroupChat
-                ? chatState.setSelectedChat(chat)
+                ? chatState.setSelectedChat({...chat, sender})
                 : chatState.setSelectedChat({
                     ...chat,
-                    chatName: getSender(chatState?.user, chat.users).username,
+                    chatName: sender.username,
                   });
+              chatState.setVisible((prev: boolean) => !prev);
             }}
             className="cursor-pointer"
           >

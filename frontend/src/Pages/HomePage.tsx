@@ -5,10 +5,8 @@ import MainPanel from "../Components/MainPanel/MainPanel";
 import ChatWindow from "../Components/ChatWindow/ChatWindow";
 import { ChatState } from "../Context/ChatProvider";
 
-function HomePage(props: any) {
+function HomePage() {
   const chatState = ChatState();
-  const [visible, setVisible] = useState(true);
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,8 +30,8 @@ function HomePage(props: any) {
 
   return (
     <div className="HomePage max-w-screen-2xl h-screen mx-auto grid grid-cols-12">
-      <MainPanel visible={visible} />
-      <ChatWindow visible={visible} />
+      <MainPanel />
+      <ChatWindow />
     </div>
   );
 }

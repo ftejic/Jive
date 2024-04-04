@@ -7,6 +7,7 @@ import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import axios from "axios";
 import SearchResults from "./SearchResults";
 import CreateGroupSheet from "./CreateGroupSheet";
+import { ChatState } from "../../Context/ChatProvider";
 
 interface User {
   _id: string;
@@ -33,10 +34,11 @@ interface SearchData {
   user: User | null;
 }
 
-function MainPanel(props: any) {
+function MainPanel() {
   const [searchValue, setSearchValue] = useState("");
   const [searchData, setSearchData] = useState<SearchData | null>(null);
   const [isCreateGroupSheetOpen, setIsCreateGroupSheetOpen] = useState(false);
+  const chatState = ChatState();
 
   useEffect(() => {
     const getData = async () => {
@@ -66,7 +68,7 @@ function MainPanel(props: any) {
   return (
     <div
       className={`${
-        props.visible ? "flex" : "hidden"
+        chatState?.visible ? "flex" : "hidden"
       } md:flex flex-col col-start-1 col-end-13 md:col-end-5 max-h-screen`}
     >
       <Header
@@ -75,8 +77,8 @@ function MainPanel(props: any) {
         setIsCreateGroupSheetOpen={setIsCreateGroupSheetOpen}
       />
       <form className="hidden md:block">
-        <div className="relative px-3 py-3">
-          <MagnifyingGlassIcon className="absolute w-5 h-5 top-5 left-6 text-muted-foreground" />
+        <div className="relative px-4 py-3">
+          <MagnifyingGlassIcon className="absolute w-5 h-5 top-5 left-7 text-muted-foreground" />
           <Input
             type="search"
             placeholder="Search or start new chat"
