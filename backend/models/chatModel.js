@@ -19,7 +19,7 @@ const chatSchema = mongoose.Schema(
       ref: "User",
     },
   },
-  { timeStamps: true }
+  { timestamps: true }
 );
 
 const Chat = mongoose.model("Chat", chatSchema);

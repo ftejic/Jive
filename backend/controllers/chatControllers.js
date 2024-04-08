@@ -22,7 +22,7 @@ const accessChat = asyncHandler(async (req, res) => {
 
   chat = await User.populate(chat, {
     path: "latestMessage.sender",
-    select: "name image email",
+    select: "username image email",
   });
 
   if (chat.length !== 0) {

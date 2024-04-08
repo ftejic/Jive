@@ -43,7 +43,7 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 
   if (user) {
-    res.status(201).json({ message: "User Created" });
+    return res.status(201).json({ message: "User Created" });
   } else {
     res.status(400);
     throw new Error("User not found.");
@@ -61,7 +61,7 @@ const authUser = asyncHandler(async (req, res) => {
     const session = await createSession(user._id);
 
     if (session) {
-      res.status(201).json({ sessionToken: session._id });
+      return res.status(201).json({ sessionToken: session._id });
     } else {
       res.status(400);
       throw new Error("Session not found.");
