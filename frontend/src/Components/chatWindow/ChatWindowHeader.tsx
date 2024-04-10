@@ -8,8 +8,10 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 
+
 function ChatWindowHeader() {
   const chatState = ChatState();
+  console.log(chatState?.selectedChat);
   return (
     <div className="bg-muted py-3 px-4 flex items-center justify-between">
       <div className="flex items-center gap-4">
@@ -21,7 +23,11 @@ function ChatWindowHeader() {
               : chatState?.selectedChat?.sender?.username[0]}
           </AvatarFallback>
         </Avatar>
-        <p>{chatState?.selectedChat?.chatName}</p>
+        <p>
+          {chatState?.selectedChat?.isGroupChat
+            ? chatState.selectedChat.chatName
+            : chatState?.selectedChat?.sender?.username}
+        </p>
       </div>
       <DropdownMenu>
         <DropdownMenuTrigger className="outline-none">

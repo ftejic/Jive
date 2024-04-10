@@ -34,7 +34,6 @@ function Chats() {
                 ? chatState.setSelectedChat({ ...chat, sender })
                 : chatState.setSelectedChat({
                     ...chat,
-                    chatName: sender.username,
                   });
               chatState.setVisible((prev: boolean) => !prev);
             }}
