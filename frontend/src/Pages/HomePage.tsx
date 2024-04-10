@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import MainPanel from "../Components/MainPanel/MainPanel";
 import ChatWindow from "../Components/ChatWindow/ChatWindow";

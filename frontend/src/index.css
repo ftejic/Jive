@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @layer base {
   :root {
     --background: 222.2 84% 4.9%;
@@ -27,7 +26,6 @@
   }
 }
 
-
 @layer base {
   * {
     @apply border-border;
@@ -37,4 +35,46 @@
     font-feature-settings: "rlig" 1, "calt" 1;
     box-sizing: border-box;
   }
+}
+
+.ScrollBar {
+  max-height: 100%!important;
+  height: 100%!important;
+}
+
+.ScrollBar::-webkit-scrollbar {
+  display: flex;
+  user-select: none;
+  touch-action: none;
+  padding: 1px;
+  background: transparent;
+  width: 8px;
+  height: 100%;
+  border-left: 1px;
+  border-left-color: transparent;
+}
+
+.ScrollBar::-webkit-scrollbar-thumb {
+  flex: 1;
+  background: transparent;
+  border-radius: 10px;
+  position: relative;
+}
+
+.ScrollBar:hover {
+  &&.ScrollBar::-webkit-scrollbar-thumb {
+    background: hsl(217.2, 32.6%, 17.5%);
+  }
+}
+
+.ScrollBar::-webkit-scrollbar-thumb::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  min-width: 44px;
+  min-height: 44px;
 }

@@ -16,7 +16,9 @@ function ChatWindowHeader() {
         <Avatar className="hidden md:block">
           <AvatarImage src={chatState?.selectedChat?.sender?.image} />
           <AvatarFallback className="bg-muted-foreground">
-            {chatState?.selectedChat?.chatName[0]}
+            {chatState?.selectedChat?.isGroupChat
+              ? chatState.selectedChat.chatName[0]
+              : chatState?.selectedChat?.sender?.username[0]}
           </AvatarFallback>
         </Avatar>
         <p>{chatState?.selectedChat?.chatName}</p>

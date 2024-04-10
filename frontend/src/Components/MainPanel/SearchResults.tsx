@@ -12,6 +12,7 @@ interface User {
 }
 
 interface Message {
+  _id: string;
   sender: User;
   content: string;
 }

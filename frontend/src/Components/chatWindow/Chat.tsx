@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { Form, FormControl, FormField, FormItem } from "../ui/form";
-import { ScrollArea } from "../ui/scroll-area";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "../ui/input";
@@ -8,7 +7,8 @@ import { Button } from "../ui/button";
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
 import axios from "axios";
 import { ChatState } from "../../Context/ChatProvider";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Messages from "./Messages";
 
 interface User {
   _id: string;
@@ -18,6 +18,7 @@ interface User {
 }
 
 interface Message {
+  _id: string;
   sender: User;
   content: string;
 }
@@ -46,6 +47,22 @@ function Chat() {
     },
   });
 
+  const fetchMessages = async () => {
+    if (!chatState?.selectedChat) return;
+
+    try {
+      const { data } = await axios.get(
+        `http://localhost:5000/api/message/${chatState.selectedChat._id}`,
+        {
+          withCredentials: true,
+        }
+      );
+      setMessages(data);
+    } catch (error) {
+      console.log("Fetching messages failed!");
+    }
+  };
+
   async function handleSendMessage(values: z.infer<typeof formSchema>) {
     const { message } = values;
 
@@ -67,9 +84,13 @@ function Chat() {
     }
   }
 
+  useEffect(() => {
+    fetchMessages();
+  }, chatState?.selectedChat ? [chatState?.selectedChat] : []);
+
   return (
     <>
-      <ScrollArea className="h-full"></ScrollArea>
+      <Messages messages={messages}/>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleSendMessage)}
