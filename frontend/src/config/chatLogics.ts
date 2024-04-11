@@ -55,14 +55,14 @@ export const isSameSenderMargin = (
     messages[index + 1].sender._id === message.sender._id &&
     messages[index].sender._id !== userId
   )
-    return 'ml-12';
+    return 'ml-0 md:ml-12';
   else if (
     (index < messages.length - 1 &&
       messages[index + 1].sender._id !== message.sender._id &&
       messages[index].sender._id !== userId) ||
     (index === messages.length - 1 && messages[index].sender._id !== userId)
   )
-    return 'ml-2';
+    return 'ml-0 md:ml-2';
   else return "ml-auto";
 };
 

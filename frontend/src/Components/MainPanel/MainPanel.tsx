@@ -20,6 +20,7 @@ interface Message {
   _id: string;
   sender: User;
   content: string;
+  chat: Chat;
 }
 
 interface Chat {

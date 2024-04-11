@@ -15,7 +15,7 @@ function ChatWindowHeader() {
   return (
     <div className="bg-muted py-3 px-4 flex items-center justify-between">
       <div className="flex items-center gap-4">
-        <Avatar className="hidden md:block">
+        <Avatar>
           <AvatarImage src={chatState?.selectedChat?.sender?.image} />
           <AvatarFallback className="bg-muted-foreground">
             {chatState?.selectedChat?.isGroupChat

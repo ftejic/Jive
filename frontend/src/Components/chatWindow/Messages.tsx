@@ -7,7 +7,6 @@ import {
 } from "../../config/chatLogics";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import ScrollableFeed from "react-scrollable-feed";
-import { ScrollBar } from "../ui/scroll-area";
 
 interface User {
   _id: string;
@@ -33,7 +32,12 @@ function Messages(props: Props) {
     <ScrollableFeed className="ScrollBar h-full py-2 px-4">
       {props.messages &&
         props.messages.map((message, index) => (
-          <div key={message._id} className="flex items-center">
+          <div
+            key={message._id}
+            className={`flex items-center ${
+              isSameUser(props.messages, message, index) ? "mt-1" : "mt-10"
+            }`}
+          >
             {(isSameSender(
               props.messages,
               message,
@@ -58,7 +62,7 @@ function Messages(props: Props) {
                 message,
                 index,
                 chatState?.user?._id
-              )} ${isSameUser(props.messages, message, index) ? 'mt-1' : 'mt-10'}`}
+              )}`}
             >
               {message.content}
             </p>

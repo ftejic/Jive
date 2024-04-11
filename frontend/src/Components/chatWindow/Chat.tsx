@@ -9,6 +9,7 @@ import axios from "axios";
 import { ChatState } from "../../Context/ChatProvider";
 import { useEffect, useState } from "react";
 import Messages from "./Messages";
+import io from "socket.io-client";
 
 interface User {
   _id: string;
@@ -21,6 +22,7 @@ interface Message {
   _id: string;
   sender: User;
   content: string;
+  chat: Chat;
 }
 
 interface Chat {
@@ -32,8 +34,11 @@ interface Chat {
   sender?: User;
 }
 
+let socket: any, selectedChatCompare: Chat | null | undefined;
+
 function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
+  const [socketConnected, setSocketConnected] = useState(false);
   const chatState = ChatState();
 
   const formSchema = z.object({
@@ -58,6 +63,8 @@ function Chat() {
         }
       );
       setMessages(data);
+
+      socket.emit("join chat", chatState?.selectedChat?._id);
     } catch (error) {
       console.log("Fetching messages failed!");
     }
@@ -77,6 +84,7 @@ function Chat() {
           withCredentials: true,
         }
       );
+      socket.emit("new message", data);
       setMessages((prev) => [...prev, data]);
       form.reset({ message: "" });
     } catch (error) {
@@ -86,8 +94,25 @@ function Chat() {
 
   useEffect(() => {
     fetchMessages();
+    selectedChatCompare = chatState?.selectedChat;
   }, chatState?.selectedChat ? [chatState?.selectedChat] : []);
 
+  useEffect(() => {
+    socket = io("http://localhost:5000");
+    socket.emit("setup", chatState?.user);
+    socket.on("connection", () => {setSocketConnected(true)})
+  }, []);
+
+  useEffect(() => {
+    socket.on("message received", (newMessage: Message) => {
+      if(!selectedChatCompare || selectedChatCompare._id !== newMessage.chat._id) {
+        // NOTIFICATION
+      } else {
+        setMessages([...messages, newMessage]);
+      }
+    });
+  });
+  
   return (
     <>
       <Messages messages={messages}/>
