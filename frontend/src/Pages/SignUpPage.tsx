@@ -8,10 +8,18 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "../Components/ui/form";
 import { Input } from "../Components/ui/input";
 import { Button } from "../Components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../Components/ui/card";
 
 function SignUpPage() {
   const navigate = useNavigate();
@@ -70,12 +78,17 @@ function SignUpPage() {
   }
 
   return (
-    <div className="SignUpPage flex lg:items-center min-h-screen">
-      <div className="container max-w-md mx-auto flex flex-col sm:gap-5 mt-28 lg:mt-0">
-        <div className="sm:border px-5 py-5">
-          <h1 className="text-4xl font-bold mb-10 text-center text-foreground">
-            Sign Up
-          </h1>
+    <div className="SignUpPage flex flex-col justify-center items-center min-h-screen">
+      <Card className="max-w-sm">
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold">
+            Create an account
+          </CardTitle>
+          <CardDescription>
+            Enter email and username to create your account
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(handleSubmit)}
@@ -87,10 +100,11 @@ function SignUpPage() {
                 name="username"
                 render={({ field }) => (
                   <FormItem>
+                    <FormLabel>Username</FormLabel>
                     <FormControl>
                       <Input
                         type="text"
-                        placeholder="Enter your username"
+                        placeholder="John Doe"
                         {...field}
                       />
                     </FormControl>
@@ -103,10 +117,11 @@ function SignUpPage() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
+                    <FormLabel>Email</FormLabel>
                     <FormControl>
                       <Input
                         type="text"
-                        placeholder="Enter your email"
+                        placeholder="someone@example.com"
                         {...field}
                       />
                     </FormControl>
@@ -114,51 +129,54 @@ function SignUpPage() {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="Create strong password"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="confirmPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="Confirm Password"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div>
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Password</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="password"
+                          placeholder="At least 8 characters"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="confirmPassword"
+                  render={({ field }) => (
+                    <FormItem className="mt-2">
+                      <FormControl>
+                        <Input
+                          type="password"
+                          placeholder="Confirm password"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
               <Button type="submit" className="w-full">
-                Sign Up
+                Create account
               </Button>
             </form>
           </Form>
-        </div>
-        <div className="flex justify-center gap-1 sm:border sm:border-border px-5 sm:py-5">
-          <p className="text-foreground">Already have an account?</p>
-          <Link to="/sign-in" className="text-muted-foreground">
-            Sign In
-          </Link>
-        </div>
-      </div>
+          <div className="mt-4 text-center text-sm">
+            Already have an account?{" "}
+            <Link to="/sign-in" className="underline">
+              Sign In
+            </Link>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

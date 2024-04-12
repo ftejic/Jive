@@ -8,11 +8,19 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "../Components/ui/form";
 import { Input } from "../Components/ui/input";
 import { Button } from "../Components/ui/button";
 import { ChatState } from "../Context/ChatProvider";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../Components/ui/card";
 
 function SignInPage() {
   const navigate = useNavigate();
@@ -57,10 +65,15 @@ function SignInPage() {
   }
 
   return (
-    <div className="SignInPage flex lg:items-center min-h-screen">
-      <div className="container max-w-md mx-auto flex flex-col sm:gap-5 mt-28 lg:mt-0">
-        <div className="sm:border sm:border-border px-5 py-5">
-          <h1 className="text-4xl font-bold mb-10 text-center">Welcome Back</h1>
+    <div className="SignInPage flex flex-col justify-center items-center min-h-screen">
+      <Card className="max-w-sm ">
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold">Welcome back</CardTitle>
+          <CardDescription>
+            Enter your email below to sign in to your account
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(handleSubmit)}
@@ -72,10 +85,11 @@ function SignInPage() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
+                    <FormLabel>Email</FormLabel>
                     <FormControl>
                       <Input
                         type="text"
-                        placeholder="Enter your email"
+                        placeholder="someone@example.com"
                         {...field}
                       />
                     </FormControl>
@@ -88,12 +102,9 @@ function SignInPage() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
+                    <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="Enter your password"
-                        {...field}
-                      />
+                      <Input type="password" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -104,14 +115,14 @@ function SignInPage() {
               </Button>
             </form>
           </Form>
-        </div>
-        <div className="flex justify-center gap-1 sm:border px-5 sm:py-5">
-          <p className="text-foreground">Don't have an account?</p>
-          <Link to="/sign-up" className="font-medium text-muted-foreground">
-            Sign Up
-          </Link>
-        </div>
-      </div>
+          <div className="mt-4 text-center text-sm">
+            Don&apos;t have an account?{" "}
+            <Link to="/sign-up" className="underline">
+              Sign Up
+            </Link>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

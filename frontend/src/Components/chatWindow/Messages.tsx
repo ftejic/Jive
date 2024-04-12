@@ -55,9 +55,9 @@ function Messages(props: Props) {
             <p
               className={`${
                 message.sender._id === chatState?.user?._id
-                  ? "bg-muted-foreground"
+                  ? "bg-primary text-primary-foreground"
                   : "bg-muted"
-              } rounded-[4px] px-2 ${isSameSenderMargin(
+              } rounded-lg px-3 py-2 max-w-[75%] text-sm ${isSameSenderMargin(
                 props.messages,
                 message,
                 index,

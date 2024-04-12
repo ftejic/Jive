@@ -78,7 +78,7 @@ function MainPanel() {
         setSearchValue={setSearchValue}
         setIsCreateGroupSheetOpen={setIsCreateGroupSheetOpen}
       />
-      <form className="hidden md:block">
+      <form className="hidden md:block border-x">
         <div className="relative px-4 py-3">
           <MagnifyingGlassIcon className="absolute w-5 h-5 top-5 left-7 text-muted-foreground" />
           <Input
