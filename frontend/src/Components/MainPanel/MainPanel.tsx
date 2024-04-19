@@ -36,7 +36,14 @@ interface SearchData {
   user: User | null;
 }
 
-function MainPanel() {
+interface Props {
+  userInfoWindowVisible: boolean;
+  groupInfoWindowVisible: boolean;
+  setUserInfoWindowVisible: any;
+  setGroupInfoWindowVisible: any;
+}
+
+function MainPanel(props: Props) {
   const [searchValue, setSearchValue] = useState("");
   const [searchData, setSearchData] = useState<SearchData | null>(null);
   const [isCreateGroupSheetOpen, setIsCreateGroupSheetOpen] = useState(false);
@@ -70,7 +77,11 @@ function MainPanel() {
   return (
     <div
       className={`${
-        chatState?.visible ? "flex" : "hidden"
+        props.userInfoWindowVisible || props.groupInfoWindowVisible
+          ? "hidden"
+          : chatState?.visible
+          ? "flex"
+          : "hidden"
       } md:flex flex-col col-start-1 col-end-13 md:col-end-5 max-h-screen`}
     >
       <Header
@@ -97,7 +108,10 @@ function MainPanel() {
             setSearchValue={setSearchValue}
           />
         ) : (
-          <Chats />
+          <Chats
+            setUserInfoWindowVisible={props.setUserInfoWindowVisible}
+            setGroupInfoWindowVisible={props.setGroupInfoWindowVisible}
+          />
         )}
       </ScrollArea>
       <CreateGroupSheet

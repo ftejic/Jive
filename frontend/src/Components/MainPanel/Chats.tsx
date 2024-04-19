@@ -4,7 +4,12 @@ import axios from "axios";
 import { getSender } from "../../config/chatLogics";
 import { ChatState } from "../../Context/ChatProvider";
 
-function Chats() {
+interface Props {
+  setUserInfoWindowVisible: any;
+  setGroupInfoWindowVisible: any;
+}
+
+function Chats(props: Props) {
   const chatState = ChatState();
 
   useEffect(() => {
@@ -35,7 +40,9 @@ function Chats() {
                 : chatState.setSelectedChat({
                     ...chat,
                   });
-              chatState.setVisible((prev: boolean) => !prev);
+              chatState.setVisible(false);
+              props.setGroupInfoWindowVisible(false);
+              props.setUserInfoWindowVisible(false);
             }}
             className="cursor-pointer"
           >

@@ -8,10 +8,13 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 
+interface Props {
+  setUserInfoWindowVisible: any;
+  setGroupInfoWindowVisible: any;
+}
 
-function ChatWindowHeader() {
+function ChatWindowHeader(props: Props) {
   const chatState = ChatState();
-  console.log(chatState?.selectedChat);
   return (
     <div className="bg-muted py-3 px-4 flex items-center justify-between">
       <div className="flex items-center gap-4">
@@ -35,12 +38,12 @@ function ChatWindowHeader() {
         </DropdownMenuTrigger>
         {chatState?.selectedChat?.isGroupChat ? (
           <DropdownMenuContent className="-right-1 absolute">
-            <DropdownMenuItem>Group info</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => props.setGroupInfoWindowVisible(true)}>Group info</DropdownMenuItem>
             <DropdownMenuItem>Exit Group</DropdownMenuItem>
           </DropdownMenuContent>
         ) : (
           <DropdownMenuContent className="-right-1 absolute">
-            <DropdownMenuItem>View User</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => props.setUserInfoWindowVisible(true)}>View User</DropdownMenuItem>
           </DropdownMenuContent>
         )}
       </DropdownMenu>
