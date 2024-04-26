@@ -22,6 +22,7 @@ interface Chat {
   _id: string;
   chatName: string;
   isGroupChat: boolean;
+  groupAdmins?: User[];
   users: User[];
   latestMessage: Message;
 }

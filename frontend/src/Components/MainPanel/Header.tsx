@@ -16,7 +16,14 @@ import { ChatState } from "..//../Context/ChatProvider";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-function Header(props: any) {
+interface Props {
+  searchValue: string;
+  setSearchValue: any;
+  setIsCreateGroupSheetOpen: any;
+  setIsSettingsOpen: any;
+}
+
+function Header(props: Props) {
   const chatState = ChatState();
   const navigate = useNavigate();
   const [searchVisible, setSearchVisible] = useState(false);
@@ -61,13 +68,13 @@ function Header(props: any) {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="-right-1 absolute">
               <DropdownMenuItem
-                onClick={() =>
-                  props.setIsCreateGroupSheetOpen((prev: boolean) => !prev)
-                }
+                onClick={() => props.setIsCreateGroupSheetOpen(true)}
               >
                 New Group
               </DropdownMenuItem>
-              <DropdownMenuItem>Settings</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => props.setIsSettingsOpen(true)}>
+                Settings
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={() => logout()}>
                 Log Out
               </DropdownMenuItem>

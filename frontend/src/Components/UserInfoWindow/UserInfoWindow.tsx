@@ -16,7 +16,7 @@ function ViewUserWindow(props: Props) {
     <div
       className={`${
         props.userInfoWindowVisible ? "flex" : "hidden"
-      } flex-col col-start-1 md:col-start-5 lg:col-start-9 xl:col-start-10 col-end-13`}
+      } max-h-screen flex-col col-start-1 md:col-start-5 lg:col-start-9 xl:col-start-10 col-end-13`}
     >
       <UserInfoWindowHeader setUserInfoWindowVisible={props.setUserInfoWindowVisible}/>
       <ScrollArea>

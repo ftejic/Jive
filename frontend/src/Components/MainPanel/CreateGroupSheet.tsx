@@ -1,10 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "../ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
 import axios from "axios";
 import { ChatState } from "../../Context/ChatProvider";
 import { Input } from "../ui/input";
@@ -31,6 +26,7 @@ interface Chat {
   _id: string;
   chatName: string;
   isGroupChat: boolean;
+  groupAdmins?: User[];
   users: User[];
   latestMessage: Message;
 }
@@ -57,7 +53,7 @@ function CreateGroupSheet(props: Props) {
     const getData = async () => {
       try {
         if (searchValue.length !== 0) {
-          const res = await axios.post(
+          const { data } = await axios.post(
             "http://localhost:5000/api/chat/search",
             { searchTerm: searchValue },
             {
@@ -67,10 +63,11 @@ function CreateGroupSheet(props: Props) {
               withCredentials: true,
             }
           );
-          const dataWithoutGroups = res.data.chats.filter(
+          const dataWithoutGroups = data.chats.filter(
             (chat: Chat) => !chat.isGroupChat
           );
-          setSearchData({ chats: dataWithoutGroups, user: null });
+
+          setSearchData({ chats: dataWithoutGroups, user: data.user });
         } else {
           setSearchData(null);
         }
@@ -154,9 +151,9 @@ function CreateGroupSheet(props: Props) {
               onChange={(e) => setSearchValue(e.target.value)}
               className="my-4"
             />
-            <div className="flex flex-wrap gap-2 mb-4">
-              {groupUsers.length !== 0 &&
-                groupUsers.map((user) => (
+            {groupUsers.length !== 0 && (
+              <div className="flex flex-wrap gap-2 mb-4">
+                {groupUsers.map((user) => (
                   <Badge
                     key={user._id}
                     variant="outline"
@@ -169,7 +166,9 @@ function CreateGroupSheet(props: Props) {
                     {user.username}
                   </Badge>
                 ))}
-            </div>
+              </div>
+            )}
+
             <div>
               {!searchValue ? (
                 <></>
@@ -202,7 +201,7 @@ function CreateGroupSheet(props: Props) {
                   </div>
                 ))
               ) : searchData?.user ? (
-                <div>
+                <div className="mb-4 cursor-pointer">
                   <UserCard user={searchData.user} />
                 </div>
               ) : (

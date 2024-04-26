@@ -17,15 +17,15 @@ interface Props {
 function ChatCard(props: Props) {
 
   return (
-    <div className="flex items-center gap-4 px-4">
+    <div className="flex items-center gap-4">
       <Avatar className="h-10 w-10 xl:h-14 xl:w-14">
         <AvatarImage src={props.sender?.image} alt="Avatar" />
         <AvatarFallback>{props.chatName[0]}</AvatarFallback>
       </Avatar>
-      <div className="flex justify-between w-full border-b py-5">
+      <div className="flex justify-between w-full md:border-b py-4 md:py-5">
         <div className="flex flex-col gap-1">
           <p className="text-sm font-medium leading-none">{props.chatName}</p>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-muted-foreground line-clamp-1">
             {props.latestMessage ? props.latestMessage : "Start a chat"}
           </p>
         </div>

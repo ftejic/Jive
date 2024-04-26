@@ -19,6 +19,7 @@ interface Chat {
   _id: string;
   chatName: string;
   isGroupChat: boolean;
+  groupAdmins?: User[];
   users: User[];
   latestMessage: Message;
   sender?: User;
@@ -31,6 +32,8 @@ interface ChatContextType {
   setSelectedChat: any;
   chats: Chat[] | null;
   setChats: any;
+  messages: Message[] | null;
+  setMessages: any;
   cookie: any;
   setCookie: any;
   removeCookie: any;
@@ -44,6 +47,7 @@ const ChatProvider = ({ children }: { children: any }) => {
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [chats, setChats] = useState<Chat[] | null>(null);
+  const [messages, setMessages] = useState<Message[] | null>(null);
   const [cookie, setCookie, removeCookie] = useCookies(["jive.session-token"]);
   const [visible, setVisible] = useState(true);
 
@@ -56,6 +60,8 @@ const ChatProvider = ({ children }: { children: any }) => {
         setUser,
         chats,
         setChats,
+        messages,
+        setMessages,
         cookie,
         setCookie,
         removeCookie,

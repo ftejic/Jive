@@ -8,6 +8,7 @@ import axios from "axios";
 import SearchResults from "./SearchResults";
 import CreateGroupSheet from "./CreateGroupSheet";
 import { ChatState } from "../../Context/ChatProvider";
+import Settings from "./Settings";
 
 interface User {
   _id: string;
@@ -27,6 +28,7 @@ interface Chat {
   _id: string;
   chatName: string;
   isGroupChat: boolean;
+  groupAdmins?: User[];
   users: User[];
   latestMessage: Message;
 }
@@ -47,13 +49,14 @@ function MainPanel(props: Props) {
   const [searchValue, setSearchValue] = useState("");
   const [searchData, setSearchData] = useState<SearchData | null>(null);
   const [isCreateGroupSheetOpen, setIsCreateGroupSheetOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const chatState = ChatState();
 
   useEffect(() => {
     const getData = async () => {
       try {
         if (searchValue.length !== 0) {
-          const res = await axios.post(
+          const { data } = await axios.post(
             "http://localhost:5000/api/chat/search",
             { searchTerm: searchValue },
             {
@@ -63,7 +66,7 @@ function MainPanel(props: Props) {
               withCredentials: true,
             }
           );
-          setSearchData(res.data);
+          setSearchData(data);
         } else {
           setSearchData(null);
         }
@@ -73,6 +76,8 @@ function MainPanel(props: Props) {
     };
     getData();
   }, [searchValue]);
+
+  
 
   return (
     <div
@@ -88,6 +93,7 @@ function MainPanel(props: Props) {
         searchValue={searchValue}
         setSearchValue={setSearchValue}
         setIsCreateGroupSheetOpen={setIsCreateGroupSheetOpen}
+        setIsSettingsOpen={setIsSettingsOpen}
       />
       <form className="hidden md:block border-x">
         <div className="relative px-4 py-3">
@@ -101,7 +107,7 @@ function MainPanel(props: Props) {
           />
         </div>
       </form>
-      <ScrollArea className="h-full border">
+      <ScrollArea className="h-full border px-4">
         {searchValue.length > 0 ? (
           <SearchResults
             searchData={searchData}
@@ -117,6 +123,10 @@ function MainPanel(props: Props) {
       <CreateGroupSheet
         isCreateGroupSheetOpen={isCreateGroupSheetOpen}
         setIsCreateGroupSheetOpen={setIsCreateGroupSheetOpen}
+      />
+      <Settings
+        isSettingsOpen={isSettingsOpen}
+        setIsSettingsOpen={setIsSettingsOpen}
       />
     </div>
   );

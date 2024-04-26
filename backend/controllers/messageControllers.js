@@ -22,11 +22,6 @@ const sendMessage = asyncHandler(async (req, res) => {
       select: "username image email",
     });
 
-    message = await User.populate(message, {
-      path: "chat.users",
-      select: "username image email",
-    });
-
     await Chat.findByIdAndUpdate(req.body.chat, { latestMessage: message });
 
     res.json(message);

@@ -1,4 +1,4 @@
-import { DotsVerticalIcon } from "@radix-ui/react-icons";
+import { DotsVerticalIcon, ArrowLeftIcon } from "@radix-ui/react-icons";
 import { ChatState } from "../../Context/ChatProvider";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import {
@@ -18,14 +18,17 @@ function ChatWindowHeader(props: Props) {
   return (
     <div className="bg-muted py-3 px-4 flex items-center justify-between">
       <div className="flex items-center gap-4">
-        <Avatar>
-          <AvatarImage src={chatState?.selectedChat?.sender?.image} />
-          <AvatarFallback className="bg-muted-foreground">
-            {chatState?.selectedChat?.isGroupChat
-              ? chatState.selectedChat.chatName[0]
-              : chatState?.selectedChat?.sender?.username[0]}
-          </AvatarFallback>
-        </Avatar>
+        <div className="flex items-center gap-1" onClick={() => chatState?.setVisible(true)}>
+          <ArrowLeftIcon className="w-5 h-5 text-foreground md:hidden"/>
+          <Avatar>
+            <AvatarImage src={chatState?.selectedChat?.sender?.image} />
+            <AvatarFallback className="bg-muted-foreground">
+              {chatState?.selectedChat?.isGroupChat
+                ? chatState.selectedChat.chatName[0]
+                : chatState?.selectedChat?.sender?.username[0]}
+            </AvatarFallback>
+          </Avatar>
+        </div>
         <p>
           {chatState?.selectedChat?.isGroupChat
             ? chatState.selectedChat.chatName
@@ -38,12 +41,20 @@ function ChatWindowHeader(props: Props) {
         </DropdownMenuTrigger>
         {chatState?.selectedChat?.isGroupChat ? (
           <DropdownMenuContent className="-right-1 absolute">
-            <DropdownMenuItem onClick={() => props.setGroupInfoWindowVisible(true)}>Group info</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => props.setGroupInfoWindowVisible(true)}
+            >
+              Group info
+            </DropdownMenuItem>
             <DropdownMenuItem>Exit Group</DropdownMenuItem>
           </DropdownMenuContent>
         ) : (
           <DropdownMenuContent className="-right-1 absolute">
-            <DropdownMenuItem onClick={() => props.setUserInfoWindowVisible(true)}>View User</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => props.setUserInfoWindowVisible(true)}
+            >
+              View User
+            </DropdownMenuItem>
           </DropdownMenuContent>
         )}
       </DropdownMenu>

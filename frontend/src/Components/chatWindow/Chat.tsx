@@ -37,7 +37,6 @@ interface Chat {
 let socket: any, selectedChatCompare: Chat | null | undefined;
 
 function Chat() {
-  const [messages, setMessages] = useState<Message[]>([]);
   const [socketConnected, setSocketConnected] = useState(false);
   const chatState = ChatState();
 
@@ -62,7 +61,7 @@ function Chat() {
           withCredentials: true,
         }
       );
-      setMessages(data);
+      chatState.setMessages(data);
 
       socket.emit("join chat", chatState?.selectedChat?._id);
     } catch (error) {
@@ -85,37 +84,47 @@ function Chat() {
         }
       );
       socket.emit("new message", data);
-      setMessages((prev) => [...prev, data]);
+      chatState?.setMessages((prev: Message[]) => [...prev, data]);
       form.reset({ message: "" });
     } catch (error) {
       console.log(`Sending message Failed: ${error}`);
     }
   }
 
-  useEffect(() => {
-    fetchMessages();
-    selectedChatCompare = chatState?.selectedChat;
-  }, chatState?.selectedChat ? [chatState?.selectedChat] : []);
+  useEffect(
+    () => {
+      fetchMessages();
+      selectedChatCompare = chatState?.selectedChat;
+    },
+    chatState?.selectedChat ? [chatState?.selectedChat] : []
+  );
 
   useEffect(() => {
     socket = io("http://localhost:5000");
     socket.emit("setup", chatState?.user);
-    socket.on("connection", () => {setSocketConnected(true)})
+    socket.on("connection", () => {
+      setSocketConnected(true);
+    });
   }, []);
 
   useEffect(() => {
     socket.on("message received", (newMessage: Message) => {
-      if(!selectedChatCompare || selectedChatCompare._id !== newMessage.chat._id) {
+      if (
+        !selectedChatCompare ||
+        selectedChatCompare._id !== newMessage.chat._id
+      ) {
         // NOTIFICATION
       } else {
-        setMessages([...messages, newMessage]);
+        if (chatState?.messages != null) {
+          chatState?.setMessages([...chatState?.messages, newMessage]);
+        }
       }
     });
   });
-  
+
   return (
     <>
-      <Messages messages={messages}/>
+      <Messages />
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleSendMessage)}

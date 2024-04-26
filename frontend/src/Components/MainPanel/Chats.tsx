@@ -25,7 +25,8 @@ function Chats(props: Props) {
       }
     };
     getChats();
-  }, []);
+  }, [chatState?.messages]);
+
 
   return (
     <div>

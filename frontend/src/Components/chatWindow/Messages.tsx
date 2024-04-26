@@ -2,38 +2,24 @@ import { ChatState } from "../../Context/ChatProvider";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import ScrollableFeed from "react-scrollable-feed";
 
-interface User {
-  _id: string;
-  username: string;
-  email: string;
-  image: string;
-}
-
-interface Message {
-  _id: string;
-  sender: User;
-  content: string;
-}
-
-interface Props {
-  messages: Message[];
-}
-
-function Messages(props: Props) {
+function Messages() {
   const chatState = ChatState();
 
   return (
     <ScrollableFeed className="ScrollBar h-full py-2 px-4">
-      {props.messages &&
-        props.messages.map((message, index) => {
+      {chatState?.messages &&
+        chatState.messages.map((message, index) => {
           const isFirstMessage =
             index === 0 ||
-            props.messages[index - 1].sender._id !== message.sender._id;
+            !chatState?.messages ||
+            (index > 0 &&
+              chatState.messages[index - 1]?.sender._id !== message.sender._id);
           const isCurrentUser = message.sender._id === chatState?.user?._id;
           const shouldRenderAvatar =
             !isCurrentUser &&
             isFirstMessage &&
             (chatState?.selectedChat?.isGroupChat || !chatState?.selectedChat);
+          const isGroupChat = chatState?.selectedChat?.isGroupChat;
 
           return (
             <div
@@ -55,7 +41,7 @@ function Messages(props: Props) {
                   isCurrentUser
                     ? "bg-primary text-primary-foreground ml-auto"
                     : "bg-muted"
-                } relative rounded-md px-3 py-2 max-w-[75%] text-sm`}
+                } ${!isCurrentUser && !isFirstMessage && isGroupChat ? "ml-9" : ""} relative rounded-md px-3 py-2 max-w-[75%] text-sm break-words`}
               >
                 {isFirstMessage && (
                   <span
