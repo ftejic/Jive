@@ -25,6 +25,7 @@ const accessChat = asyncHandler(async (req, res) => {
     select: "username image email",
   });
 
+
   if (chat.length !== 0) {
     return res.send(chat[0]);
   } else {
@@ -60,7 +61,7 @@ const getChats = asyncHandler(async (req, res) => {
 
     chats = await User.populate(chats, {
       path: "latestMessage.sender",
-      select: "name image email",
+      select: "username image email",
     });
 
     res.status(200).json(chats);
@@ -208,7 +209,7 @@ const search = asyncHandler(async (req, res) => {
 
     chats = await User.populate(chats, {
       path: "latestMessage.sender",
-      select: "name image email",
+      select: "username image email",
     });
 
     const user = await User.findOne({ email: searchTerm });

@@ -21,12 +21,13 @@ interface Props {
   setSearchValue: any;
   setIsCreateGroupSheetOpen: any;
   setIsSettingsOpen: any;
+  searchVisible: boolean;
+  setSearchVisible: any;
 }
 
 function Header(props: Props) {
   const chatState = ChatState();
   const navigate = useNavigate();
-  const [searchVisible, setSearchVisible] = useState(false);
 
   const logout = async () => {
     try {
@@ -47,7 +48,7 @@ function Header(props: Props) {
     <div className="bg-muted py-3 px-4">
       <div
         className={`${
-          searchVisible ? "hidden" : "flex"
+          props.searchVisible ? "hidden" : "flex"
         } md:flex items-center justify-between w-full`}
       >
         <Avatar className="hidden md:block">
@@ -60,7 +61,7 @@ function Header(props: Props) {
         <div className="flex gap-3">
           <MagnifyingGlassIcon
             className="md:hidden w-5 h-5 text-muted-foreground"
-            onClick={() => setSearchVisible(true)}
+            onClick={() => props.setSearchVisible(true)}
           />
           <DropdownMenu>
             <DropdownMenuTrigger className="outline-none">
@@ -84,14 +85,14 @@ function Header(props: Props) {
       </div>
       <div
         className={`${
-          searchVisible ? "block" : "hidden"
+          props.searchVisible ? "block" : "hidden"
         } md:hidden w-full py-[2px]`}
       >
         <form>
           <div className="relative">
             <ArrowLeftIcon
               className="absolute w-5 h-5 top-2 left-3 text-muted-foreground"
-              onClick={() => setSearchVisible(false)}
+              onClick={() => props.setSearchVisible(false)}
             />
             <Input
               type="search"

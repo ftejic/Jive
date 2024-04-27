@@ -33,6 +33,9 @@ interface Props {
     user: User | null;
   } | null;
   setSearchValue: any;
+  setGroupInfoWindowVisible: any;
+  setUserInfoWindowVisible: any;
+  setSearchVisible: any;
 }
 
 function SearchResults(props: Props) {
@@ -64,6 +67,7 @@ function SearchResults(props: Props) {
         sender,
       });
       props.setSearchValue("");
+      props.setSearchVisible(false);
     } catch (error) {
       console.log(error);
     }
@@ -78,23 +82,27 @@ function SearchResults(props: Props) {
             return (
               <div
                 key={chat._id}
-                onClick={() =>
+                onClick={() => {
                   chat.isGroupChat
                     ? chatState?.setSelectedChat(chat)
                     : chatState?.setSelectedChat({
                         ...chat,
                         chatName: sender.username,
                         sender,
-                      })
-                }
-                className="cursor-pointer"
+                      });
+                  props.setSearchValue("");
+                  chatState?.setVisible(false);
+                  props.setGroupInfoWindowVisible(false);
+                  props.setUserInfoWindowVisible(false);
+                  props.setSearchVisible(false);
+                }}
+                className="cursor-pointer px-4 hover:bg-muted/30"
               >
                 <ChatCard
                   _id={chat._id}
                   chatName={chat.isGroupChat ? chat.chatName : sender.username}
-                  latestMessage={
-                    chat.latestMessage ? chat.latestMessage.content : ""
-                  }
+                  isGroupChat={chat.isGroupChat}
+                  latestMessage={chat.latestMessage ? chat.latestMessage : null}
                 />
               </div>
             );

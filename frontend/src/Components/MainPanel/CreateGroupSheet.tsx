@@ -195,7 +195,7 @@ function CreateGroupSheet(props: Props) {
                         }
                       });
                     }}
-                    className="mb-4 cursor-pointer"
+                    className="mb-4 cursor-pointer hover:bg-muted/30"
                   >
                     <UserCard user={getSender(chatState?.user, chat.users)} />
                   </div>

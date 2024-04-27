@@ -11,7 +11,15 @@ import {
 import { Input } from "../ui/input";
 import axios from "axios";
 import { getSender } from "../../config/chatLogics";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader } from "../ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+} from "../ui/alert-dialog";
 
 interface User {
   _id: string;
@@ -52,7 +60,7 @@ function GroupMembers(props: Props) {
   const [searchData, setSearchData] = useState<SearchData | null>(null);
   const [removeUserDialogVisible, setRemoveUserDialogVisible] = useState(false);
   const [makeAdminDialogVisible, setMakeAdminDialogVisible] = useState(false);
-  
+
   const [clickedUser, setClickedUser] = useState<User | null>(null);
 
   useEffect(() => {
@@ -187,7 +195,7 @@ function GroupMembers(props: Props) {
   };
 
   return (
-    <div className="flex flex-col px-4 py-10 border-b">
+    <div className="flex flex-col py-10 border-b">
       <Input
         type="search"
         placeholder="Add Member"
@@ -205,7 +213,7 @@ function GroupMembers(props: Props) {
               onClick={() =>
                 addUserToGroup(getSender(chatState?.user, chat.users)._id)
               }
-              className="mb-4 cursor-pointer"
+              className="mb-4 px-4 cursor-pointer hover:bg-muted/30"
             >
               <UserCard user={getSender(chatState?.user, chat.users)} />
             </div>
@@ -219,19 +227,19 @@ function GroupMembers(props: Props) {
             <UserCard user={searchData.user} />
           </div>
         ) : (
-          <p className="mb-4 italic text-muted-foreground">No results</p>
+          <p className="mb-4 px-4 italic text-muted-foreground">No results</p>
         )}
       </div>
-      <p className="text-sm py-5 text-muted-foreground">
+      <p className="text-sm px-4 py-5 text-muted-foreground">
         {chatState?.selectedChat?.users.length} Members
       </p>
       <div>
         {chatState?.user && (
-          <div className="relative">
+          <div className="relative px-4 cursor-default">
             {props.isAdmin && (
               <Badge
                 variant="outline"
-                className="absolute top-4 right-0 font-normal"
+                className="absolute top-4 right-4 font-normal"
               >
                 Admin
               </Badge>
@@ -249,11 +257,11 @@ function GroupMembers(props: Props) {
           (props.isAdmin ? (
             <ContextMenu key={user._id}>
               <ContextMenuTrigger>
-                <div className="relative">
+                <div className="relative pl-4 pr-20 cursor-context-menu hover:bg-muted/30">
                   {isUserAdmin && (
                     <Badge
                       variant="outline"
-                      className="absolute top-4 right-0 font-normal"
+                      className="absolute top-4 right-4 font-normal"
                     >
                       Admin
                     </Badge>
@@ -291,7 +299,15 @@ function GroupMembers(props: Props) {
               </ContextMenuContent>
             </ContextMenu>
           ) : (
-            <div key={user._id}>
+            <div key={user._id} className="relative pl-4 pr-20 cursor-context-menu hover:bg-muted/30">
+              {isUserAdmin && (
+                <Badge
+                  variant="outline"
+                  className="absolute top-4 right-4 font-normal"
+                >
+                  Admin
+                </Badge>
+              )}
               <UserCard user={user} />
             </div>
           ))
@@ -322,7 +338,8 @@ function GroupMembers(props: Props) {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogDescription>
-              Make {clickedUser?.username} an admin for "{props.groupName}" group?
+              Make {clickedUser?.username} an admin for "{props.groupName}"
+              group?
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -333,7 +350,6 @@ function GroupMembers(props: Props) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-      
     </div>
   );
 }

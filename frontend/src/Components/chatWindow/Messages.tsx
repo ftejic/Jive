@@ -1,9 +1,24 @@
+import { useEffect, useState } from "react";
 import { ChatState } from "../../Context/ChatProvider";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import ScrollableFeed from "react-scrollable-feed";
 
 function Messages() {
   const chatState = ChatState();
+
+  const [showFullMessage, setShowFullMessage] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const maxMessageLengthDesktop = 750;
+  const maxMessageLengthMobile = 500;
+
+  useEffect(() => {
+    const isMobileDevice = window.matchMedia("(max-width: 768px)").matches;
+    setIsMobile(isMobileDevice);
+  }, []);
+
+  const maxMessageLength = isMobile
+    ? maxMessageLengthMobile
+    : maxMessageLengthDesktop;
 
   return (
     <ScrollableFeed className="ScrollBar h-full py-2 px-4">
@@ -41,7 +56,9 @@ function Messages() {
                   isCurrentUser
                     ? "bg-primary text-primary-foreground ml-auto"
                     : "bg-muted"
-                } ${!isCurrentUser && !isFirstMessage && isGroupChat ? "ml-9" : ""} relative rounded-md px-3 py-2 max-w-[75%] text-sm break-words`}
+                } ${
+                  !isCurrentUser && !isFirstMessage && isGroupChat ? "ml-9" : ""
+                } relative rounded-md px-3 py-2 max-w-[75%] text-sm break-words`}
               >
                 {isFirstMessage && (
                   <span
@@ -67,7 +84,13 @@ function Messages() {
                     </svg>
                   </span>
                 )}
-                {message.content}
+                {message.content.length > maxMessageLength
+                  ? !showFullMessage
+                    ? `${message.content.substring(0, maxMessageLength)}... `
+                    : message.content
+                  : message.content}
+                {message.content.length > maxMessageLength &&
+                  !showFullMessage && <span className="underline text-blue-700 cursor-pointer" onClick={() => setShowFullMessage(true)}>Read more</span>}
               </p>
             </div>
           );

@@ -48,6 +48,7 @@ interface Props {
 function MainPanel(props: Props) {
   const [searchValue, setSearchValue] = useState("");
   const [searchData, setSearchData] = useState<SearchData | null>(null);
+  const [searchVisible, setSearchVisible] = useState(false);
   const [isCreateGroupSheetOpen, setIsCreateGroupSheetOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const chatState = ChatState();
@@ -77,7 +78,6 @@ function MainPanel(props: Props) {
     getData();
   }, [searchValue]);
 
-  
 
   return (
     <div
@@ -94,6 +94,8 @@ function MainPanel(props: Props) {
         setSearchValue={setSearchValue}
         setIsCreateGroupSheetOpen={setIsCreateGroupSheetOpen}
         setIsSettingsOpen={setIsSettingsOpen}
+        searchVisible={searchVisible}
+        setSearchVisible={setSearchVisible}
       />
       <form className="hidden md:block border-x">
         <div className="relative px-4 py-3">
@@ -107,11 +109,14 @@ function MainPanel(props: Props) {
           />
         </div>
       </form>
-      <ScrollArea className="h-full border px-4">
+      <ScrollArea className="h-full border">
         {searchValue.length > 0 ? (
           <SearchResults
             searchData={searchData}
             setSearchValue={setSearchValue}
+            setUserInfoWindowVisible={props.setUserInfoWindowVisible}
+            setGroupInfoWindowVisible={props.setGroupInfoWindowVisible}
+            setSearchVisible={setSearchVisible}
           />
         ) : (
           <Chats

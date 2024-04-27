@@ -1,3 +1,4 @@
+import { ChatState } from "../../Context/ChatProvider";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 interface User {
@@ -7,14 +8,32 @@ interface User {
   image: string;
 }
 
+interface Message {
+  _id: string;
+  sender: User;
+  content: string;
+  chat: Chat;
+}
+
+interface Chat {
+  _id: string;
+  chatName: string;
+  isGroupChat: boolean;
+  groupAdmins?: User[];
+  users: User[];
+  latestMessage: Message;
+}
+
 interface Props {
   _id: string;
   chatName: string;
   sender?: User;
-  latestMessage: string;
+  latestMessage: Message | null;
+  isGroupChat: boolean;
 }
 
 function ChatCard(props: Props) {
+  const chatState = ChatState();
 
   return (
     <div className="flex items-center gap-4">
@@ -26,7 +45,15 @@ function ChatCard(props: Props) {
         <div className="flex flex-col gap-1">
           <p className="text-sm font-medium leading-none">{props.chatName}</p>
           <p className="text-sm text-muted-foreground line-clamp-1">
-            {props.latestMessage ? props.latestMessage : "Start a chat"}
+            {props.latestMessage
+              ? props.isGroupChat
+                ? `${
+                    props.latestMessage.sender._id === chatState?.user?._id
+                      ? "You"
+                      : props.latestMessage.sender.username
+                  }: ${props.latestMessage.content}`
+                : `${props.latestMessage.content}`
+              : "Start chat"}
           </p>
         </div>
         <div className="text-xs text-muted-foreground">19:34</div>

@@ -60,7 +60,7 @@ function GroupInfo(props: Props) {
               />
               <div className="flex absolute top-2 right-3">
                 <Cross2Icon
-                  className="w-5 h-5 text-foreground"
+                  className="w-5 h-5 text-foreground cursor-pointer"
                   onClick={() => {
                     chatState?.selectedChat?.chatName &&
                       props.setGroupName(chatState?.selectedChat?.chatName);
@@ -68,7 +68,7 @@ function GroupInfo(props: Props) {
                   }}
                 />
                 <CheckIcon
-                  className="w-5 h-5 text-foreground"
+                  className="w-5 h-5 text-foreground cursor-pointer"
                   onClick={() => changeGroupName()}
                 />
               </div>
@@ -76,10 +76,9 @@ function GroupInfo(props: Props) {
           ) : (
             <div
               className="flex items-center gap-2"
-              onClick={() => setRenameVisible(true)}
             >
               <p>{props.groupName}</p>
-              <Pencil1Icon className="w-5 h-5 text-foreground" />
+              <Pencil1Icon className="w-5 h-5 text-foreground cursor-pointer" onClick={() => setRenameVisible(true)}/>
             </div>
           )
         ) : (
