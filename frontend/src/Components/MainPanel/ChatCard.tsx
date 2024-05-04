@@ -35,6 +35,7 @@ interface Props {
 function ChatCard(props: Props) {
   const chatState = ChatState();
 
+
   return (
     <div className="flex items-center gap-4">
       <Avatar className="h-10 w-10 xl:h-14 xl:w-14">

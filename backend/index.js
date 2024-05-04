@@ -46,13 +46,24 @@ const io = require("socket.io")(server, {
   },
 });
 
-io.on("connection", (socket) => {
-  console.log("Connected to socket.io");
+let connectionMap = {};
+
+io.on("connection", async (socket) => {
+  console.log("Connected to socket.io:", socket.id);
+
+  socket.on("initial-data", (userId) => {
+    if (userId && userId.length > 0) {
+      if (!connectionMap[userId]) {
+        connectionMap[userId] = [];
+      }
+      connectionMap[userId].push(socket.id);
+    }
+  });
 
   socket.on("setup", (userData) => {
     socket.join(userData._id);
     socket.emit("connected");
-  })
+  });
 
   socket.on("join chat", (room) => {
     socket.join(room);
@@ -60,14 +71,53 @@ io.on("connection", (socket) => {
   });
 
   socket.on("new message", (newMessage) => {
-    let chat = newMessage.chat;
+    socket.to(newMessage.chat._id).emit("message received", newMessage);
+  });
 
-    if(!chat.users) return console.log("chat.users not defined");
-
-    chat.users.forEach(user => {
-      if(user._id == newMessage.sender._id) return;
-
-      socket.in(user._id).emit("message received", newMessage);
+  socket.on("new group", (newGroup) => {
+    newGroup.users.map((user) => {
+      if (connectionMap[user._id]) {
+        connectionMap[user._id].forEach((socketId) => {
+          io.sockets.sockets.get(socketId).join(newGroup._id);
+          socket.to(socketId).emit("group created", newGroup);
+        });
+      }
     });
-  })
+  });
+
+  socket.on("group change", (newGroup) => {
+    socket.to(newGroup._id).emit("group changed", newGroup);
+  });
+
+  socket.on("group delete", (groupId) => {
+    socket.to(groupId).emit("group deleted", groupId);
+  });
+
+  socket.on("user add", (data) => {
+    const { userId, newGroup } = data;
+    if (connectionMap[userId]) {
+      connectionMap[userId].forEach((socketId) => {
+        io.sockets.sockets.get(socketId).join(newGroup._id)
+        socket.to(socketId).emit("user added", newGroup);
+      })
+    }
+  });
+
+  socket.on("user remove", (data) => {
+    const { userId, chatId } = data;
+    if (connectionMap[userId]) {
+      socket.to(connectionMap[userId]).emit("user removed", chatId);
+    }
+  });
+
+  socket.on("disconnect", () => {
+    Object.keys(connectionMap).forEach((userId) => {
+      connectionMap[userId] = connectionMap[userId].filter(
+        (id) => id !== socket.id
+      );
+      if (connectionMap[userId].length === 0) {
+        delete connectionMap[userId];
+      }
+    });
+  });
 });

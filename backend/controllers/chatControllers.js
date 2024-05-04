@@ -18,35 +18,15 @@ const accessChat = asyncHandler(async (req, res) => {
     ],
   })
     .populate("users", "-password")
-    .populate("latestMessage");
+    .populate({
+      path: "latestMessage",
+      populate: {
+        path: "sender",
+        select: "username image email",
+      },
+    });
 
-  chat = await User.populate(chat, {
-    path: "latestMessage.sender",
-    select: "username image email",
-  });
-
-
-  if (chat.length !== 0) {
-    return res.send(chat[0]);
-  } else {
-    var chatData = {
-      chatName: null,
-      isGroupChat: false,
-      users: [req.user._id, userId],
-    };
-  }
-
-  try {
-    const createdChat = await Chat.create(chatData);
-    const wholeChat = await Chat.findOne({ _id: createdChat._id }).populate(
-      "users",
-      "-password"
-    );
-    res.status(200).json(wholeChat);
-  } catch (error) {
-    res.status(400);
-    throw new Error(error.message);
-  }
+  return res.send(chat[0]);
 });
 
 const getChats = asyncHandler(async (req, res) => {
@@ -56,15 +36,43 @@ const getChats = asyncHandler(async (req, res) => {
     })
       .populate("users", "-password")
       .populate("groupAdmins", "-password")
-      .populate("latestMessage")
+      .populate({
+        path: "latestMessage",
+        populate: {
+          path: "sender",
+          select: "username image email",
+        },
+      })
       .sort({ updatedAt: -1 });
 
-    chats = await User.populate(chats, {
-      path: "latestMessage.sender",
-      select: "username image email",
-    });
-
     res.status(200).json(chats);
+  } catch (error) {
+    res.status(400);
+    throw new Error(error.message);
+  }
+});
+
+const createChat = asyncHandler(async (req, res) => {
+  const { userId } = req.body;
+
+  if (!userId) {
+    console.log("UserId not provided");
+    return res.sendStatus(400);
+  }
+
+  let chatData = {
+    chatName: null,
+    isGroupChat: false,
+    users: [req.user._id, userId],
+  };
+
+  try {
+    const createdChat = await Chat.create(chatData);
+    const wholeChat = await Chat.findOne({ _id: createdChat._id }).populate(
+      "users",
+      "-password"
+    );
+    res.status(200).json(wholeChat);
   } catch (error) {
     res.status(400);
     throw new Error(error.message);
@@ -131,7 +139,14 @@ const renameGroup = asyncHandler(async (req, res) => {
     { new: true }
   )
     .populate("users", "-password")
-    .populate("groupAdmins", "-password");
+    .populate("groupAdmins", "-password")
+    .populate({
+      path: "latestMessage",
+      populate: {
+        path: "sender",
+        select: "username image email",
+      },
+    });
 
   if (!updatedChat) {
     res.status(400);
@@ -150,7 +165,14 @@ const addToGroup = asyncHandler(async (req, res) => {
     { new: true }
   )
     .populate("users", "-password")
-    .populate("groupAdmins", "-password");
+    .populate("groupAdmins", "-password")
+    .populate({
+      path: "latestMessage",
+      populate: {
+        path: "sender",
+        select: "username image email",
+      },
+    });
 
   if (!updatedChat) {
     res.status(404);
@@ -165,11 +187,18 @@ const removeFromGroup = asyncHandler(async (req, res) => {
 
   const updatedChat = await Chat.findByIdAndUpdate(
     chatId,
-    { $pull: { users: userId } },
+    { $pull: { users: userId, groupAdmins: userId } },
     { new: true }
   )
     .populate("users", "-password")
-    .populate("groupAdmins", "-password");
+    .populate("groupAdmins", "-password")
+    .populate({
+      path: "latestMessage",
+      populate: {
+        path: "sender",
+        select: "username image email",
+      },
+    });
 
   if (!updatedChat) {
     res.status(404);
@@ -204,13 +233,14 @@ const search = asyncHandler(async (req, res) => {
     })
       .populate("users", "-password")
       .populate("groupAdmins", "-password")
-      .populate("latestMessage")
+      .populate({
+        path: "latestMessage",
+        populate: {
+          path: "sender",
+          select: "username image email",
+        },
+      })
       .sort({ updatedAt: -1 });
-
-    chats = await User.populate(chats, {
-      path: "latestMessage.sender",
-      select: "username image email",
-    });
 
     const user = await User.findOne({ email: searchTerm });
 
@@ -224,8 +254,6 @@ const search = asyncHandler(async (req, res) => {
 const addGroupAdmin = asyncHandler(async (req, res) => {
   const { chatId, userId } = req.body;
 
-  console.log(chatId, userId);
-
   if (!chatId || !userId) {
     return res.status(400).send({ message: "Chat Id or User Id missing" });
   }
@@ -236,7 +264,14 @@ const addGroupAdmin = asyncHandler(async (req, res) => {
     { new: true }
   )
     .populate("users", "-password")
-    .populate("groupAdmins", "-password");
+    .populate("groupAdmins", "-password")
+    .populate({
+      path: "latestMessage",
+      populate: {
+        path: "sender",
+        select: "username image email",
+      },
+    });
 
   if (!updatedChat) {
     res.status(400);
@@ -259,7 +294,14 @@ const removeGroupAdmin = asyncHandler(async (req, res) => {
     { new: true }
   )
     .populate("users", "-password")
-    .populate("groupAdmins", "-password");
+    .populate("groupAdmins", "-password")
+    .populate({
+      path: "latestMessage",
+      populate: {
+        path: "sender",
+        select: "username image email",
+      },
+    });
 
   if (!updatedChat) {
     res.status(400);
@@ -272,6 +314,7 @@ const removeGroupAdmin = asyncHandler(async (req, res) => {
 module.exports = {
   accessChat,
   getChats,
+  createChat,
   createGroupChat,
   deleteGroupChat,
   renameGroup,

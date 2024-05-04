@@ -1,8 +1,29 @@
-import { useEffect } from "react";
 import ChatCard from "./ChatCard";
-import axios from "axios";
 import { getSender } from "../../config/chatLogics";
 import { ChatState } from "../../Context/ChatProvider";
+
+interface User {
+  _id: string;
+  username: string;
+  email: string;
+  image: string;
+}
+
+interface Message {
+  _id: string;
+  sender: User;
+  content: string;
+  chat: Chat;
+}
+
+interface Chat {
+  _id: string;
+  chatName: string;
+  isGroupChat: boolean;
+  users: User[];
+  latestMessage: Message;
+  sender?: User;
+}
 
 interface Props {
   setUserInfoWindowVisible: any;
@@ -11,22 +32,6 @@ interface Props {
 
 function Chats(props: Props) {
   const chatState = ChatState();
-
-  useEffect(() => {
-  const getChats = async () => {
-    try {
-      const { data } = await axios.get("http://localhost:5000/api/chat", {
-        withCredentials: true,
-      });
-
-      chatState?.setChats(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-    getChats();
-  }, [chatState?.messages]);
-
 
   return (
     <div>
@@ -51,7 +56,8 @@ function Chats(props: Props) {
                   ? "md:bg-muted/70"
                   : "bg-transparent"
               } ${
-                chatState.selectedChat?._id !== chat._id && "hover:bg-muted/30"
+                chatState.selectedChat?._id !== chat._id &&
+                "md:hover:bg-muted/30"
               }`}
             >
               <ChatCard

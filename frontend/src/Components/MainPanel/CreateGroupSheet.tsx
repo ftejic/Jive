@@ -7,6 +7,7 @@ import { Badge } from "../ui/badge";
 import { getSender } from "../../config/chatLogics";
 import UserCard from "./UserCard";
 import { Button } from "../ui/button";
+import { socket } from "../../socket";
 
 interface User {
   _id: string;
@@ -103,13 +104,13 @@ function CreateGroupSheet(props: Props) {
           withCredentials: true,
         }
       );
-      chatState?.setChats((prev: Chat[]) => {
-        if (!prev.some((chat) => chat._id === data._id)) {
-          return [...prev, data];
-        } else {
-          return prev;
-        }
-      });
+      if (chatState?.chats) {
+        const chats = [...chatState.chats];
+        chats.unshift(data);
+
+        chatState.setChats(chats);
+      }
+      socket.emit("new group", data);
       chatState?.setSelectedChat(data);
       setGroupName("");
       setGroupUsers([]);

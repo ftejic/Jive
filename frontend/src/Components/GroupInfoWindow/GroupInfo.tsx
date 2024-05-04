@@ -4,16 +4,17 @@ import axios from "axios";
 import { ChatState } from "../../Context/ChatProvider";
 import { useState } from "react";
 import { Input } from "../ui/input";
+import { socket } from "../../socket";
 
 interface Props {
-    groupName: string;
-    setGroupName: any;
-    isAdmin: boolean | undefined | null;
+  groupName: string;
+  setGroupName: any;
+  isAdmin: boolean | undefined | null;
 }
 
 function GroupInfo(props: Props) {
-    const chatState = ChatState();
-    const [renameVisible, setRenameVisible] = useState(false);
+  const chatState = ChatState();
+  const [renameVisible, setRenameVisible] = useState(false);
 
   const changeGroupName = async () => {
     try {
@@ -31,6 +32,7 @@ function GroupInfo(props: Props) {
         }
       );
 
+      socket.emit("group change", data);
       chatState?.setSelectedChat(data);
       setRenameVisible(false);
     } catch (error) {
@@ -74,11 +76,12 @@ function GroupInfo(props: Props) {
               </div>
             </div>
           ) : (
-            <div
-              className="flex items-center gap-2"
-            >
+            <div className="flex items-center gap-2">
               <p>{props.groupName}</p>
-              <Pencil1Icon className="w-5 h-5 text-foreground cursor-pointer" onClick={() => setRenameVisible(true)}/>
+              <Pencil1Icon
+                className="w-5 h-5 text-foreground cursor-pointer"
+                onClick={() => setRenameVisible(true)}
+              />
             </div>
           )
         ) : (

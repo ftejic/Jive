@@ -20,6 +20,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
 } from "../ui/alert-dialog";
+import { socket } from "../../socket";
 
 interface User {
   _id: string;
@@ -120,6 +121,8 @@ function GroupMembers(props: Props) {
         }
       );
 
+      socket.emit("group change", data);
+      socket.emit("user add", {userId, newGroup: data});
       chatState?.setSelectedChat(data);
       setSearchValue("");
       setSearchData(null);
@@ -144,6 +147,8 @@ function GroupMembers(props: Props) {
         }
       );
 
+      socket.emit("group change", data);
+      socket.emit("user remove", {userId: clickedUser?._id, chatId: chatState?.selectedChat?._id});
       chatState?.setSelectedChat(data);
     } catch (error) {
       console.log(error);
@@ -166,6 +171,7 @@ function GroupMembers(props: Props) {
         }
       );
 
+      socket.emit("group change", data);
       chatState?.setSelectedChat(data);
     } catch (error) {
       console.log(error);
@@ -188,6 +194,7 @@ function GroupMembers(props: Props) {
         }
       );
 
+      socket.emit("group change", data);
       chatState?.setSelectedChat(data);
     } catch (error) {
       console.log(error);

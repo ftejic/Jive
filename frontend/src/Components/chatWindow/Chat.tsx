@@ -9,7 +9,7 @@ import axios from "axios";
 import { ChatState } from "../../Context/ChatProvider";
 import { useEffect, useState } from "react";
 import Messages from "./Messages";
-import io from "socket.io-client";
+import { socket } from "../../socket";
 
 interface User {
   _id: string;
@@ -34,10 +34,7 @@ interface Chat {
   sender?: User;
 }
 
-let socket: any, selectedChatCompare: Chat | null | undefined;
-
 function Chat() {
-  const [socketConnected, setSocketConnected] = useState(false);
   const chatState = ChatState();
 
   const formSchema = z.object({
@@ -62,8 +59,6 @@ function Chat() {
         }
       );
       chatState.setMessages(data);
-
-      socket.emit("join chat", chatState?.selectedChat?._id);
     } catch (error) {
       console.log("Fetching messages failed!");
     }
@@ -85,6 +80,16 @@ function Chat() {
       );
       socket.emit("new message", data);
       chatState?.setMessages((prev: Message[]) => [...prev, data]);
+      if (chatState?.chats) {
+        const chats = [...chatState.chats];
+        const indexOfChat = chats.findIndex((c) => c._id === data.chat._id);
+        chats[indexOfChat].latestMessage = data;
+
+        const updatedChat = chats.splice(indexOfChat, 1)[0];
+        chats.unshift(updatedChat);
+
+        chatState?.setChats(chats);
+      }
       form.reset({ message: "" });
     } catch (error) {
       console.log(`Sending message Failed: ${error}`);
@@ -94,33 +99,9 @@ function Chat() {
   useEffect(
     () => {
       fetchMessages();
-      selectedChatCompare = chatState?.selectedChat;
     },
     chatState?.selectedChat ? [chatState?.selectedChat] : []
   );
-
-  useEffect(() => {
-    socket = io("http://localhost:5000");
-    socket.emit("setup", chatState?.user);
-    socket.on("connection", () => {
-      setSocketConnected(true);
-    });
-  }, []);
-
-  useEffect(() => {
-    socket.on("message received", (newMessage: Message) => {
-      if (
-        !selectedChatCompare ||
-        selectedChatCompare._id !== newMessage.chat._id
-      ) {
-        // NOTIFICATION
-      } else {
-        if (chatState?.messages != null) {
-          chatState?.setMessages([...chatState?.messages, newMessage]);
-        }
-      }
-    });
-  });
 
   return (
     <>

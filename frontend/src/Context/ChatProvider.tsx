@@ -39,6 +39,8 @@ interface ChatContextType {
   removeCookie: any;
   visible: boolean;
   setVisible: any;
+  joinedRooms: string[];
+  setJoinedRooms: any;
 }
 
 const ChatContext = createContext<ChatContextType | null>(null);
@@ -50,6 +52,7 @@ const ChatProvider = ({ children }: { children: any }) => {
   const [messages, setMessages] = useState<Message[] | null>(null);
   const [cookie, setCookie, removeCookie] = useCookies(["jive.session-token"]);
   const [visible, setVisible] = useState(true);
+  const [joinedRooms, setJoinedRooms] = useState([]);
 
   return (
     <ChatContext.Provider
@@ -67,6 +70,8 @@ const ChatProvider = ({ children }: { children: any }) => {
         removeCookie,
         visible,
         setVisible,
+        joinedRooms,
+        setJoinedRooms,
       }}
     >
       <CookiesProvider>{children}</CookiesProvider>

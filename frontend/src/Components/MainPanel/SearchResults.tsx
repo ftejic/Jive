@@ -112,13 +112,13 @@ function SearchResults(props: Props) {
         <div>
           <div
             onClick={() => createChat(props.searchData?.user?._id)}
-            className="cursor-pointer"
+            className="cursor-pointer px-4"
           >
             <UserCard user={props.searchData.user} textVisible={true} />
           </div>
         </div>
       ) : (
-        <p className="p-3 italic">No results found</p>
+        <p className="p-4 italic">No results found</p>
       )}
     </div>
   );

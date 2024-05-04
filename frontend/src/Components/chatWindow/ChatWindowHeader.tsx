@@ -11,6 +11,7 @@ import {
 interface Props {
   setUserInfoWindowVisible: any;
   setGroupInfoWindowVisible: any;
+  setExitGroupDialogVisible: any;
 }
 
 function ChatWindowHeader(props: Props) {
@@ -18,8 +19,11 @@ function ChatWindowHeader(props: Props) {
   return (
     <div className="bg-muted py-3 px-4 flex items-center justify-between">
       <div className="flex items-center gap-4">
-        <div className="flex items-center gap-1" onClick={() => chatState?.setVisible(true)}>
-          <ArrowLeftIcon className="w-5 h-5 text-foreground md:hidden"/>
+        <div
+          className="flex items-center gap-1"
+          onClick={() => chatState?.setVisible(true)}
+        >
+          <ArrowLeftIcon className="w-5 h-5 text-foreground md:hidden" />
           <Avatar>
             <AvatarImage src={chatState?.selectedChat?.sender?.image} />
             <AvatarFallback className="bg-muted-foreground">
@@ -46,7 +50,11 @@ function ChatWindowHeader(props: Props) {
             >
               Group info
             </DropdownMenuItem>
-            <DropdownMenuItem>Exit Group</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => props.setExitGroupDialogVisible(true)}
+            >
+              Exit Group
+            </DropdownMenuItem>
           </DropdownMenuContent>
         ) : (
           <DropdownMenuContent className="-right-1 absolute">
