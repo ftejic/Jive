@@ -311,6 +311,36 @@ const removeGroupAdmin = asyncHandler(async (req, res) => {
   }
 });
 
+const changeGroupImage = asyncHandler(async (req, res) => {
+  const { chatId, image } = req.body;
+
+  if (!image || !chatId) {
+    return res.status(400).send({ message: "Image or ChatId missing" });
+  }
+
+  const updatedChat = await Chat.findByIdAndUpdate(
+    chatId,
+    { image: image },
+    { new: true }
+  )
+    .populate("users", "-password")
+    .populate("groupAdmins", "-password")
+    .populate({
+      path: "latestMessage",
+      populate: {
+        path: "sender",
+        select: "username image email",
+      },
+    });
+
+  if (!updatedChat) {
+    res.status(400);
+    throw new Error("Chat not found");
+  } else {
+    res.json(updatedChat);
+  }
+});
+
 module.exports = {
   accessChat,
   getChats,
@@ -323,4 +353,5 @@ module.exports = {
   addGroupAdmin,
   removeGroupAdmin,
   search,
+  changeGroupImage,
 };

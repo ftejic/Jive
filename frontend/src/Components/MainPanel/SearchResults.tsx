@@ -25,6 +25,7 @@ interface Chat {
   groupAdmins?: User[];
   users: User[];
   latestMessage: Message;
+  image: string;
 }
 
 interface Props {
@@ -103,6 +104,8 @@ function SearchResults(props: Props) {
                   chatName={chat.isGroupChat ? chat.chatName : sender.username}
                   isGroupChat={chat.isGroupChat}
                   latestMessage={chat.latestMessage ? chat.latestMessage : null}
+                  image={chat.image}
+                  sender={sender}
                 />
               </div>
             );

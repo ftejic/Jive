@@ -49,6 +49,7 @@ interface ChatInterface {
   users: User[];
   latestMessage: Message;
   sender?: User;
+  image: string;
 }
 
 function ChatWindow(props: Props) {

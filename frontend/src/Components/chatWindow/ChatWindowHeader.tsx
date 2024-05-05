@@ -25,7 +25,7 @@ function ChatWindowHeader(props: Props) {
         >
           <ArrowLeftIcon className="w-5 h-5 text-foreground md:hidden" />
           <Avatar>
-            <AvatarImage src={chatState?.selectedChat?.sender?.image} />
+            <AvatarImage src={chatState?.selectedChat?.image} />
             <AvatarFallback className="bg-muted-foreground">
               {chatState?.selectedChat?.isGroupChat
                 ? chatState.selectedChat.chatName[0]

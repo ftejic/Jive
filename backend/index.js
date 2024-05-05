@@ -86,7 +86,7 @@ io.on("connection", async (socket) => {
   });
 
   socket.on("group change", (newGroup) => {
-    socket.to(newGroup._id).emit("group changed", newGroup);
+    io.to(newGroup._id).emit("group changed", newGroup);
   });
 
   socket.on("group delete", (groupId) => {

@@ -43,6 +43,7 @@ interface Chat {
   groupAdmins?: User[];
   users: User[];
   latestMessage: Message;
+  image: string;
 }
 
 interface SearchData {
@@ -107,7 +108,7 @@ function GroupMembers(props: Props) {
 
   const addUserToGroup = async (userId: string) => {
     try {
-      const { data } = await axios.put(
+      const { data } = await axios.patch(
         "http://localhost:5000/api/chat/group-add",
         {
           chatId: chatState?.selectedChat?._id,
@@ -133,7 +134,7 @@ function GroupMembers(props: Props) {
 
   const removeUserFromGroup = async () => {
     try {
-      const { data } = await axios.put(
+      const { data } = await axios.patch(
         "http://localhost:5000/api/chat/group-remove",
         {
           chatId: chatState?.selectedChat?._id,
@@ -157,7 +158,7 @@ function GroupMembers(props: Props) {
 
   const addAdmin = async () => {
     try {
-      const { data } = await axios.put(
+      const { data } = await axios.patch(
         "http://localhost:5000/api/chat/group-add-admin",
         {
           chatId: chatState?.selectedChat?._id,
@@ -180,7 +181,7 @@ function GroupMembers(props: Props) {
 
   const removeAdmin = async (userId: string) => {
     try {
-      const { data } = await axios.put(
+      const { data } = await axios.patch(
         "http://localhost:5000/api/chat/group-remove-admin",
         {
           chatId: chatState?.selectedChat?._id,

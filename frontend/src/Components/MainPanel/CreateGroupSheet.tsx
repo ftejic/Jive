@@ -30,6 +30,7 @@ interface Chat {
   groupAdmins?: User[];
   users: User[];
   latestMessage: Message;
+  image: string;
 }
 
 interface SearchData {

@@ -23,6 +23,7 @@ interface Chat {
   users: User[];
   latestMessage: Message;
   sender?: User;
+  image: string;
 }
 
 interface Props {
@@ -65,6 +66,8 @@ function Chats(props: Props) {
                 chatName={chat.isGroupChat ? chat.chatName : sender.username}
                 isGroupChat={chat.isGroupChat}
                 latestMessage={chat.latestMessage ? chat.latestMessage : null}
+                image={chat.image}
+                sender={sender}
               />
             </div>
           );

@@ -20,6 +20,7 @@ const chatSchema = mongoose.Schema(
         ref: "User",
       },
     ],
+    image: { type: String, default: "" },
   },
   { timestamps: true }
 );

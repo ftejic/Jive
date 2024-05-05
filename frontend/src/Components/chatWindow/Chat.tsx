@@ -32,6 +32,7 @@ interface Chat {
   users: User[];
   latestMessage: Message;
   sender?: User;
+  image: string;
 }
 
 function Chat() {
