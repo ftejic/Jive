@@ -110,4 +110,54 @@ const signOut = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { getUsers, registerUser, authUser, checkAuth, signOut };
+const changeUsername = asyncHandler(async (req, res) => {
+  const { username } = req.body;
+
+  if (!username) {
+    return res.status(400).send({ message: "Username missing" });
+  }
+
+  const user = await User.findByIdAndUpdate(
+    req.user._id,
+    { username: username },
+    { new: true }
+  ).select("-password");
+
+  if (!user) {
+    res.status(400);
+    throw new Error("User not found");
+  } else {
+    res.json(user);
+  }
+});
+
+const changeProfileImage = asyncHandler(async (req, res) => {
+  const { image } = req.body;
+
+  if (!image) {
+    return res.status(400).send({ message: "Image missing" });
+  }
+
+  const user = await User.findByIdAndUpdate(
+    req.user._id,
+    { image: image },
+    { new: true }
+  ).select("-password");
+
+  if (!user) {
+    res.status(400);
+    throw new Error("User not found");
+  } else {
+    res.json(user);
+  }
+});
+
+module.exports = {
+  getUsers,
+  registerUser,
+  authUser,
+  checkAuth,
+  signOut,
+  changeUsername,
+  changeProfileImage,
+};

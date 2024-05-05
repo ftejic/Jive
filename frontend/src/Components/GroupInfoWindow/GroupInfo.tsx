@@ -153,17 +153,19 @@ function GroupInfo(props: Props) {
                   : ""}
               </AvatarFallback>
             </Avatar>
-            <label className="absolute bottom-0 right-0">
-              <div className="bg-background w-8 h-8 lg:w-16 lg:h-16 rounded-full flex items-center justify-center cursor-pointer">
-                <UploadIcon className="w-6 h-6 lg:w-11 lg:h-11 text-foreground cursor-pointer" />
-              </div>
-              <input
-                type="file"
-                className="hidden"
-                onChange={handleFileChange}
-                ref={fileInputRef}
-              />
-            </label>
+            {props.isAdmin && (
+              <label className="absolute bottom-0 right-0">
+                <div className="bg-background w-8 h-8 lg:w-16 lg:h-16 rounded-full flex items-center justify-center cursor-pointer">
+                  <UploadIcon className="w-6 h-6 lg:w-11 lg:h-11 text-foreground cursor-pointer" />
+                </div>
+                <input
+                  type="file"
+                  className="hidden"
+                  onChange={handleFileChange}
+                  ref={fileInputRef}
+                />
+              </label>
+            )}
           </div>
           {image && (
             <div>
