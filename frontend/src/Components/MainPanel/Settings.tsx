@@ -69,7 +69,7 @@ function Settings(props: Props) {
   const saveChanges = async () => {
     if (image) {
       const name = new Date().getTime() + image.name;
-      const storageRef = ref(firebaseStorage, `Group Images/${name}`);
+      const storageRef = ref(firebaseStorage, `Profile Images/${name}`);
       const uploadTask = uploadBytesResumable(storageRef, image);
 
       uploadTask.on(
