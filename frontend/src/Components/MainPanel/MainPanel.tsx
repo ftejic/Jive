@@ -22,6 +22,7 @@ interface Message {
   sender: User;
   content: string;
   chat: Chat;
+  updatedAt: string;
 }
 
 interface Chat {
@@ -32,6 +33,7 @@ interface Chat {
   users: User[];
   latestMessage: Message;
   image: string;
+  updatedAt: string;
 }
 
 interface SearchData {
@@ -79,6 +81,35 @@ function MainPanel(props: Props) {
     getData();
   }, [searchValue]);
 
+  const getTime = (date: string | null): string | null => {
+    if(!date) return null;
+    let dateTime = new Date(date);
+    let currentDate = new Date();
+
+    if (
+      dateTime.getDate() === currentDate.getDate() &&
+      dateTime.getMonth() === currentDate.getMonth() &&
+      dateTime.getFullYear() === currentDate.getFullYear()
+    ) {
+      return dateTime.toLocaleTimeString([], {
+        hour12: false,
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    } else {
+      var yesterday = new Date(currentDate);
+      yesterday.setDate(yesterday.getDate() - 1);
+      if (
+        dateTime.getDate() === yesterday.getDate() &&
+        dateTime.getMonth() === yesterday.getMonth() &&
+        dateTime.getFullYear() === yesterday.getFullYear()
+      ) {
+        return "yesterday";
+      } else {
+        return dateTime.toLocaleDateString();
+      }
+    }
+  };
 
   return (
     <div
@@ -118,11 +149,13 @@ function MainPanel(props: Props) {
             setUserInfoWindowVisible={props.setUserInfoWindowVisible}
             setGroupInfoWindowVisible={props.setGroupInfoWindowVisible}
             setSearchVisible={setSearchVisible}
+            getTime={getTime}
           />
         ) : (
           <Chats
             setUserInfoWindowVisible={props.setUserInfoWindowVisible}
             setGroupInfoWindowVisible={props.setGroupInfoWindowVisible}
+            getTime={getTime}
           />
         )}
       </ScrollArea>

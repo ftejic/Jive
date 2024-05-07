@@ -34,6 +34,7 @@ interface Message {
   sender: User;
   content: string;
   chat: Chat;
+  updatedAt: string;
 }
 
 interface Chat {
@@ -44,6 +45,7 @@ interface Chat {
   users: User[];
   latestMessage: Message;
   image: string;
+  updatedAt: string;
 }
 
 interface SearchData {

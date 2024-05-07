@@ -39,7 +39,8 @@ interface Message {
   _id: string;
   sender: User;
   content: string;
-  chat: Chat;
+  chat: ChatInterface;
+  updatedAt: string;
 }
 
 interface ChatInterface {
@@ -50,20 +51,11 @@ interface ChatInterface {
   latestMessage: Message;
   sender?: User;
   image: string;
+  updatedAt: string;
 }
 
 function ChatWindow(props: Props) {
   const chatState = ChatState();
-
-  const updateChats = (newChat: ChatInterface) => {
-    if (chatState?.chats) {
-      const chats = [...chatState.chats];
-      const indexOfChat = chats.findIndex((c) => c._id === newChat._id);
-      chats[indexOfChat] = newChat;
-
-      chatState?.setChats(chats);
-    }
-  };
 
   const deleteGroup = async () => {
     if (chatState?.selectedChat) {
@@ -160,7 +152,7 @@ function ChatWindow(props: Props) {
             setGroupInfoWindowVisible={props.setGroupInfoWindowVisible}
             setExitGroupDialogVisible={props.setExitGroupDialogVisible}
           />
-          <Chat />
+            <Chat />
         </>
       ) : (
         <div className="flex items-center h-full justify-center">Jive</div>

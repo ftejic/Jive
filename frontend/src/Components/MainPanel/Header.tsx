@@ -4,7 +4,6 @@ import {
   ArrowLeftIcon,
 } from "@radix-ui/react-icons";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -45,7 +44,7 @@ function Header(props: Props) {
   };
 
   return (
-    <div className="bg-muted py-3 px-4">
+    <div className="bg-background md:bg-muted border-b md:border-b-0 border-muted/30 py-3 px-4">
       <div
         className={`${
           props.searchVisible ? "hidden" : "flex"

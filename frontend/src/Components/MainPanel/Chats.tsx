@@ -14,6 +14,7 @@ interface Message {
   sender: User;
   content: string;
   chat: Chat;
+  updatedAt: string;
 }
 
 interface Chat {
@@ -24,15 +25,19 @@ interface Chat {
   latestMessage: Message;
   sender?: User;
   image: string;
+  updatedAt: string;
 }
 
 interface Props {
   setUserInfoWindowVisible: any;
   setGroupInfoWindowVisible: any;
+  getTime: any;
 }
 
 function Chats(props: Props) {
   const chatState = ChatState();
+
+
 
   return (
     <div>
@@ -68,6 +73,7 @@ function Chats(props: Props) {
                 latestMessage={chat.latestMessage ? chat.latestMessage : null}
                 image={chat.image}
                 sender={sender}
+                dateTime={props.getTime(chat.latestMessage?.updatedAt ? chat.latestMessage?.updatedAt : null)}
               />
             </div>
           );

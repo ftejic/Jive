@@ -17,7 +17,7 @@ interface Props {
 function ChatWindowHeader(props: Props) {
   const chatState = ChatState();
   return (
-    <div className="bg-muted py-3 px-4 flex items-center justify-between">
+    <div className="bg-background md:bg-muted border-b md:border-b-0 border-muted/30 py-3 px-4 flex items-center justify-between">
       <div className="flex items-center gap-4">
         <div
           className="flex items-center gap-1"

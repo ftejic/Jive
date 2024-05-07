@@ -1,15 +1,11 @@
-import { z } from "zod";
-import { Form, FormControl, FormField, FormItem } from "../ui/form";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { PaperPlaneIcon } from "@radix-ui/react-icons";
+import { PaperPlaneIcon, FaceIcon, ImageIcon } from "@radix-ui/react-icons";
 import axios from "axios";
 import { ChatState } from "../../Context/ChatProvider";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Messages from "./Messages";
 import { socket } from "../../socket";
+import useAutosizeTextArea from "../../config/autoSizeTextArea";
 
 interface User {
   _id: string;
@@ -22,10 +18,11 @@ interface Message {
   _id: string;
   sender: User;
   content: string;
-  chat: Chat;
+  chat: ChatInterface;
+  updatedAt: string;
 }
 
-interface Chat {
+interface ChatInterface {
   _id: string;
   chatName: string;
   isGroupChat: boolean;
@@ -33,21 +30,15 @@ interface Chat {
   latestMessage: Message;
   sender?: User;
   image: string;
+  updatedAt: string;
 }
 
 function Chat() {
   const chatState = ChatState();
+  const [message, setMessage] = useState("");
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
-  const formSchema = z.object({
-    message: z.string(),
-  });
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      message: "",
-    },
-  });
+  useAutosizeTextArea(textAreaRef.current, message);
 
   const fetchMessages = async () => {
     if (!chatState?.selectedChat) return;
@@ -65,37 +56,44 @@ function Chat() {
     }
   };
 
-  async function handleSendMessage(values: z.infer<typeof formSchema>) {
-    const { message } = values;
+  const handleSendMessage = async () => {
+    if (message.length > 0) {
+      try {
+        const { data } = await axios.post(
+          "http://localhost:5000/api/message/",
+          { content: message, chat: chatState?.selectedChat?._id },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            withCredentials: true,
+          }
+        );
+        setMessage("");
+        socket.emit("new message", data);
+        chatState?.setMessages((prev: Message[]) => [...prev, data]);
+        if (chatState?.chats) {
+          const chats = [...chatState.chats];
+          const indexOfChat = chats.findIndex((c) => c._id === data.chat._id);
+          chats[indexOfChat].latestMessage = data;
 
-    try {
-      const { data } = await axios.post(
-        "http://localhost:5000/api/message/",
-        { content: message, chat: chatState?.selectedChat?._id },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
+          const updatedChat = chats.splice(indexOfChat, 1)[0];
+          chats.unshift(updatedChat);
+
+          chatState?.setChats(chats);
         }
-      );
-      socket.emit("new message", data);
-      chatState?.setMessages((prev: Message[]) => [...prev, data]);
-      if (chatState?.chats) {
-        const chats = [...chatState.chats];
-        const indexOfChat = chats.findIndex((c) => c._id === data.chat._id);
-        chats[indexOfChat].latestMessage = data;
-
-        const updatedChat = chats.splice(indexOfChat, 1)[0];
-        chats.unshift(updatedChat);
-
-        chatState?.setChats(chats);
+      } catch (error) {
+        console.log(`Sending message Failed: ${error}`);
       }
-      form.reset({ message: "" });
-    } catch (error) {
-      console.log(`Sending message Failed: ${error}`);
     }
-  }
+  };
+
+  const onEnterPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
 
   useEffect(
     () => {
@@ -107,32 +105,56 @@ function Chat() {
   return (
     <>
       <Messages />
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(handleSendMessage)}
-          className="flex w-full bg-muted py-3"
-          autoComplete="off"
-        >
-          <FormField
-            control={form.control}
-            name="message"
-            render={({ field }) => (
-              <FormItem className="w-full">
-                <FormControl>
-                  <Input
-                    placeholder="Type a message"
-                    className="border-0 focus-visible:ring-0"
-                    {...field}
-                  />
-                </FormControl>
-              </FormItem>
-            )}
+      <div className="flex justify-between gap-3 md:hidden px-1 pb-1 mt-1 md:mt-0">
+        <div className="flex flex-1 bg-muted rounded-full px-3 gap-3">
+          <div className="flex items-center h-9">
+            <FaceIcon className="w-5 h-5 text-foreground cursor-pointer" />
+          </div>
+          <textarea
+            rows={1}
+            ref={textAreaRef}
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            onKeyDown={onEnterPress}
+            placeholder="Type a message"
+            className="outline-none resize-none w-full bg-transparent max-h-[136px] py-2 text-sm placeholder:text-muted-foreground"
           />
-          <Button type="submit" className="bg-transparent hover:bg-transparent">
+          <div className="flex items-center h-9">
+            <ImageIcon className="w-5 h-5 text-foreground cursor-pointer" />
+          </div>
+        </div>
+        <Button
+          onClick={handleSendMessage}
+          className="bg-foreground rounded-full p-0 w-9 h-9 hover:bg-transparent"
+        >
+          <PaperPlaneIcon className="w-5 h-5 text-background" />
+        </Button>
+      </div>
+      <div className="hidden md:flex items-end gap-3 p-3 bg-muted">
+        <div className="flex items-center h-11">
+          <FaceIcon className="w-6 h-6 text-foreground cursor-pointer" />
+        </div>
+        <div className="flex items-center h-11">
+          <ImageIcon className="w-6 h-6 text-foreground cursor-pointer" />
+        </div>
+        <div className="w-full flex items-end gap-3">
+          <textarea
+            rows={1}
+            ref={textAreaRef}
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            onKeyDown={onEnterPress}
+            placeholder="Type a message"
+            className="outline-none resize-none w-full rounded-md bg-muted-foreground/20 max-h-[184px] px-3 py-3 text-sm placeholder:text-muted-foreground"
+          />
+          <Button
+            onClick={handleSendMessage}
+            className="bg-transparent p-0 h-11 hover:bg-transparent"
+          >
             <PaperPlaneIcon className="w-6 h-6 text-foreground" />
           </Button>
-        </form>
-      </Form>
+        </div>
+      </div>
     </>
   );
 }

@@ -20,6 +20,7 @@ interface Message {
   sender: User;
   content: string;
   chat: Chat;
+  updatedAt: string;
 }
 
 interface Chat {
@@ -30,6 +31,7 @@ interface Chat {
   latestMessage: Message;
   sender?: User;
   image: string;
+  updatedAt: string;
 }
 
 function HomePage() {

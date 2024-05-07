@@ -17,7 +17,7 @@ function UserCard(props: Props) {
     <div className="flex items-center gap-4">
       <Avatar className={`h-10 w-10 xl:h-${props.textVisible ? '14' : '10'} xl:w-${props.textVisible ? '14' : '10'}`}>
         <AvatarImage src={props.user.image} alt="Avatar" />
-        <AvatarFallback>{props.user.username[0]}</AvatarFallback>
+        <AvatarFallback className="bg-muted-foreground">{props.user.username[0]}</AvatarFallback>
       </Avatar>
       <div className="w-full py-5">
         <div className="flex flex-col gap-1">
