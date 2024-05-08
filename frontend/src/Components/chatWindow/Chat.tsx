@@ -6,6 +6,8 @@ import { useEffect, useRef, useState } from "react";
 import Messages from "./Messages";
 import { socket } from "../../socket";
 import useAutosizeTextArea from "../../config/autoSizeTextArea";
+import data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
 
 interface User {
   _id: string;
@@ -36,6 +38,7 @@ interface ChatInterface {
 function Chat() {
   const chatState = ChatState();
   const [message, setMessage] = useState("");
+  const [showPicker, setShowPicker] = useState(false);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   useAutosizeTextArea(textAreaRef.current, message);
@@ -89,7 +92,7 @@ function Chat() {
   };
 
   const onEnterPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
     }
@@ -102,13 +105,31 @@ function Chat() {
     chatState?.selectedChat ? [chatState?.selectedChat] : []
   );
 
+  const onEmojiClick = (emoji: any) => {
+    setMessage(prev => prev + emoji.native);
+  }
+
   return (
     <>
       <Messages />
+      {showPicker && (
+        <div className="hidden md:block">
+          <Picker
+            data={data}
+            onEmojiSelect={onEmojiClick}
+            previewPosition="none"
+            dynamicWidth="true"
+            maxFrequentRows={1}
+          />
+        </div>
+      )}
       <div className="flex justify-between gap-3 md:hidden px-1 pb-1 mt-1 md:mt-0">
         <div className="flex flex-1 bg-muted rounded-full px-3 gap-3">
           <div className="flex items-center h-9">
-            <FaceIcon className="w-5 h-5 text-foreground cursor-pointer" />
+            <FaceIcon
+              onClick={() => setShowPicker((val: boolean) => !val)}
+              className="w-5 h-5 text-foreground cursor-pointer"
+            />
           </div>
           <textarea
             rows={1}
@@ -132,7 +153,10 @@ function Chat() {
       </div>
       <div className="hidden md:flex items-end gap-3 p-3 bg-muted">
         <div className="flex items-center h-11">
-          <FaceIcon className="w-6 h-6 text-foreground cursor-pointer" />
+          <FaceIcon
+            onClick={() => setShowPicker((val: boolean) => !val)}
+            className="w-6 h-6 text-foreground cursor-pointer"
+          />
         </div>
         <div className="flex items-center h-11">
           <ImageIcon className="w-6 h-6 text-foreground cursor-pointer" />
@@ -155,6 +179,17 @@ function Chat() {
           </Button>
         </div>
       </div>
+      {showPicker && (
+        <div className="md:hidden mt-1">
+          <Picker
+            data={data}
+            onEmojiSelect={onEmojiClick}
+            previewPosition="none"
+            dynamicWidth="true"
+            maxFrequentRows={1}
+          />
+        </div>
+      )}
     </>
   );
 }

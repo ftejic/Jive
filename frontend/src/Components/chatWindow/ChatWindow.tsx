@@ -152,7 +152,7 @@ function ChatWindow(props: Props) {
             setGroupInfoWindowVisible={props.setGroupInfoWindowVisible}
             setExitGroupDialogVisible={props.setExitGroupDialogVisible}
           />
-            <Chat />
+          <Chat />
         </>
       ) : (
         <div className="flex items-center h-full justify-center">Jive</div>
