@@ -14,6 +14,10 @@ const messageSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Chat",
     },
+    isImage: {
+      type: Boolean,
+      default: false,
+    }
   },
   { timestamps: true }
 );

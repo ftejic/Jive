@@ -5,14 +5,19 @@ const Chat = require("../models/chatModel");
 
 const sendMessage = asyncHandler(async (req, res) => {
   const { content, chat } = req.body;
+  let { isImage } = req.body;
 
   if (!content || !chat) {
     console.log("Invalid data passed into request");
     return res.sendStatus(400);
   }
 
+  if(!isImage) {
+    isImage = false;
+  }
+
   try {
-    let message = await Message.create({ sender: req.user._id, content, chat });
+    let message = await Message.create({ sender: req.user._id, content, chat, isImage });
 
     message = await message.populate("sender", "username image");
     message = await message.populate("chat");

@@ -23,6 +23,7 @@ interface Message {
   content: string;
   chat: Chat;
   updatedAt: string;
+  isImage: boolean;
 }
 
 interface Chat {

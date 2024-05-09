@@ -18,6 +18,7 @@ interface Message {
   content: string;
   chat: Chat;
   updatedAt: string;
+  isImage: boolean;
 }
 
 interface Chat {
@@ -70,14 +71,14 @@ function GroupInfoWindow(props: Props) {
             className="flex items-center px-4 py-4 gap-3 text-destructive cursor-pointer hover:bg-muted/30"
             onClick={() => props.setExitGroupDialogVisible(true)}
           >
-            <ExitIcon className="w-5 h-5" />
+            <ExitIcon className="w-5 h-5 text-foreground" />
             <p>Exit Group</p>
           </div>
           {isAdmin && (
             <div 
               className="flex items-center px-4 py-4 gap-3 text-destructive cursor-pointer hover:bg-muted/30"
               onClick={() => props.setDeleteGroupDialogVisible(true)}>
-              <ExitIcon className="w-5 h-5" />
+              <ExitIcon className="w-5 h-5 text-foreground" />
               <p>Delete group</p>
             </div>
           )}

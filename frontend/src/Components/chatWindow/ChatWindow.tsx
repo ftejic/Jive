@@ -41,6 +41,7 @@ interface Message {
   content: string;
   chat: ChatInterface;
   updatedAt: string;
+  isImage: boolean;
 }
 
 interface ChatInterface {

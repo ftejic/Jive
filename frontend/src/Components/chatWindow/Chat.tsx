@@ -8,6 +8,7 @@ import { socket } from "../../socket";
 import useAutosizeTextArea from "../../config/autoSizeTextArea";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
+import SendImage from "./SendImage";
 
 interface User {
   _id: string;
@@ -22,6 +23,7 @@ interface Message {
   content: string;
   chat: ChatInterface;
   updatedAt: string;
+  isImage: boolean;
 }
 
 interface ChatInterface {
@@ -39,6 +41,8 @@ function Chat() {
   const chatState = ChatState();
   const [message, setMessage] = useState("");
   const [showPicker, setShowPicker] = useState(false);
+  const [image, setImage] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   useAutosizeTextArea(textAreaRef.current, message);
@@ -106,8 +110,14 @@ function Chat() {
   );
 
   const onEmojiClick = (emoji: any) => {
-    setMessage(prev => prev + emoji.native);
-  }
+    setMessage((prev) => prev + emoji.native);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setImage(e.target.files[0]);
+    }
+  };
 
   return (
     <>
@@ -141,7 +151,17 @@ function Chat() {
             className="outline-none resize-none w-full bg-transparent max-h-[136px] py-2 text-sm placeholder:text-muted-foreground"
           />
           <div className="flex items-center h-9">
-            <ImageIcon className="w-5 h-5 text-foreground cursor-pointer" />
+            <label className="cursor-pointer">
+            <div>
+              <ImageIcon className="w-5 h-5 text-foreground" />
+            </div>
+            <input
+              type="file"
+              className="hidden"
+              onChange={handleFileChange}
+              ref={fileInputRef}
+            />
+          </label>
           </div>
         </div>
         <Button
@@ -159,7 +179,17 @@ function Chat() {
           />
         </div>
         <div className="flex items-center h-11">
-          <ImageIcon className="w-6 h-6 text-foreground cursor-pointer" />
+          <label className="cursor-pointer">
+            <div>
+              <ImageIcon className="w-6 h-6 text-foreground" />
+            </div>
+            <input
+              type="file"
+              className="hidden"
+              onChange={handleFileChange}
+              ref={fileInputRef}
+            />
+          </label>
         </div>
         <div className="w-full flex items-end gap-3">
           <textarea
@@ -190,6 +220,7 @@ function Chat() {
           />
         </div>
       )}
+      {image && <SendImage image={image} setImage={setImage} />}
     </>
   );
 }

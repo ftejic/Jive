@@ -14,6 +14,7 @@ interface Message {
   content: string;
   chat: Chat;
   updatedAt: string;
+  isImage: boolean;
 }
 
 interface Chat {
@@ -40,12 +41,16 @@ interface Props {
 function ChatCard(props: Props) {
   const chatState = ChatState();
 
-
   return (
     <div className="flex items-center gap-4">
       <Avatar className="h-10 w-10 xl:h-14 xl:w-14">
-        <AvatarImage src={props.isGroupChat ? props.image : props.sender?.image} alt="Avatar" />
-        <AvatarFallback className="bg-muted-foreground">{props.chatName[0]}</AvatarFallback>
+        <AvatarImage
+          src={props.isGroupChat ? props.image : props.sender?.image}
+          alt="Avatar"
+        />
+        <AvatarFallback className="bg-muted-foreground">
+          {props.chatName[0]}
+        </AvatarFallback>
       </Avatar>
       <div className="flex justify-between w-full md:border-b py-4 md:py-5">
         <div className="flex flex-col gap-1">
@@ -57,8 +62,14 @@ function ChatCard(props: Props) {
                     props.latestMessage.sender._id === chatState?.user?._id
                       ? "You"
                       : props.latestMessage.sender.username
-                  }: ${props.latestMessage.content}`
-                : `${props.latestMessage.content}`
+                  }: ${
+                    props.latestMessage.isImage
+                      ? `sent a photo`
+                      : props.latestMessage.content
+                  }`
+                : props.latestMessage.isImage
+                ? "photo"
+                : props.latestMessage.content
               : "Start chat"}
           </p>
         </div>
