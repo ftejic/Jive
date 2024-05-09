@@ -5,12 +5,6 @@ interface User {
   image: string;
 }
 
-interface Message {
-  _id: string;
-  sender: User;
-  content: string;
-}
-
 export const getSender = (
   loggedUser: User | null | undefined,
   users: User[]

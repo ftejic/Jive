@@ -116,7 +116,7 @@ function SendImage(props: Props) {
         <img
           src={props.image ? URL.createObjectURL(props.image) : ""}
           alt="image"
-          className="max-h-[calc(100vh-120px)] w-auto"
+          className="max-h-[calc(100vh-122px)] w-auto"
         />
       </div>
       <div className="flex justify-end p-4 border-t">

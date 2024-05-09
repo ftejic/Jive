@@ -11,6 +11,7 @@ function Messages() {
   const [isMobile, setIsMobile] = useState(false);
   const [imagePreviewVisible, setImagePreviewVisible] = useState(false);
   const [clickedImage, setClickedImage] = useState("");
+  const [preloadedImages, setPreloadedImages] = useState<string[]>([]);
 
   const maxMessageLengthDesktop = 750;
   const maxMessageLengthMobile = 500;
@@ -20,9 +21,34 @@ function Messages() {
     setIsMobile(isMobileDevice);
   }, []);
 
+  useEffect(() => {
+    if (chatState?.messages) {
+      const imagesToPreload = chatState.messages
+        .filter((message) => message.isImage)
+        .map((message) => message.content);
+      preloadImages(imagesToPreload);
+    }
+  }, [chatState?.messages]);
+
+  const preloadImages = (imageUrls: string[]) => {
+    const preloaded: string[] = [];
+    imageUrls.forEach((url) => {
+      const img = new Image();
+      img.src = url;
+      img.onload = () => {
+        preloaded.push(url);
+        console.log("Image preloaded:", url);
+        setPreloadedImages(preloaded);
+      };
+      img.onerror = () => console.error("Failed to preload image:", url);
+    });
+  };
+
   const maxMessageLength = isMobile
     ? maxMessageLengthMobile
     : maxMessageLengthDesktop;
+
+  console.log("Preloaded images:", preloadedImages);
 
   return (
     <>
@@ -31,7 +57,7 @@ function Messages() {
           chatState.messages.map((message, index) => {
             const isFirstMessage =
               index === 0 ||
-              !chatState?.messages ||
+              !chatState.messages ||
               (index > 0 &&
                 chatState.messages[index - 1]?.sender._id !==
                   message.sender._id);
@@ -152,7 +178,7 @@ function Messages() {
                             className="underline text-blue-700 cursor-pointer"
                             onClick={() => setShowFullMessage(false)}
                           >
-                            Colapse
+                            Collapse
                           </span>
                         )
                       ) : (
@@ -163,8 +189,8 @@ function Messages() {
                       </span>
                     </p>
                   )}
-                  {message.isImage && (
-                    <p
+                  {message.isImage && preloadedImages.includes(message.content) && (
+                    <div
                       onClick={() => {
                         setClickedImage(message.content);
                         setImagePreviewVisible(true);
@@ -221,7 +247,7 @@ function Messages() {
                       <span className="absolute text-xs text-muted-foreground bottom-1 right-2">
                         {`${hours}:${minutes}`}
                       </span>
-                    </p>
+                    </div>
                   )}
                 </div>
               </div>
