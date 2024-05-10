@@ -100,7 +100,7 @@ function ChatWindow(props: Props) {
       ) {
         props.setOnlyAdminDialogVisible(true);
       } else {
-        const { data } = await axios.put(
+        const { data } = await axios.patch(
           "http://localhost:5000/api/chat/group-remove",
           {
             chatId: chatState?.selectedChat?._id,

@@ -1,6 +1,9 @@
 const asyncHandler = require("express-async-handler");
 const Chat = require("../models/chatModel");
 const User = require("../models/userModel");
+const crypto = require("crypto");
+
+const algorithm = "aes-256-cbc";
 
 const accessChat = asyncHandler(async (req, res) => {
   const { userId } = req.body;
@@ -26,6 +29,15 @@ const accessChat = asyncHandler(async (req, res) => {
       },
     });
 
+  if (chat[0].latestMessage) {
+    const key = Buffer.from(process.env.CRYPTOKEY, "hex");
+    const iv = Buffer.from(chat.latestMessage.iv, "hex");
+    const decipher = crypto.createDecipheriv(algorithm, key, iv);
+    let decrypted = decipher.update(chat.latestMessage.content, "hex", "utf8");
+    decrypted += decipher.final("utf8");
+    chat.latestMessage.content = decrypted;
+  }
+
   return res.send(chat[0]);
 });
 
@@ -44,6 +56,21 @@ const getChats = asyncHandler(async (req, res) => {
         },
       })
       .sort({ updatedAt: -1 });
+
+    const key = Buffer.from(process.env.CRYPTOKEY, "hex");
+    chats.forEach((chat) => {
+      if (chat.latestMessage) {
+        const iv = Buffer.from(chat.latestMessage.iv, "hex");
+        const decipher = crypto.createDecipheriv(algorithm, key, iv);
+        let decrypted = decipher.update(
+          chat.latestMessage.content,
+          "hex",
+          "utf8"
+        );
+        decrypted += decipher.final("utf8");
+        chat.latestMessage.content = decrypted;
+      }
+    });
 
     res.status(200).json(chats);
   } catch (error) {
@@ -148,6 +175,19 @@ const renameGroup = asyncHandler(async (req, res) => {
       },
     });
 
+  if (updatedChat.latestMessage) {
+    const key = Buffer.from(process.env.CRYPTOKEY, "hex");
+    const iv = Buffer.from(updatedChat.latestMessage.iv, "hex");
+    const decipher = crypto.createDecipheriv(algorithm, key, iv);
+    let decrypted = decipher.update(
+      updatedChat.latestMessage.content,
+      "hex",
+      "utf8"
+    );
+    decrypted += decipher.final("utf8");
+    updatedChat.latestMessage.content = decrypted;
+  }
+
   if (!updatedChat) {
     res.status(400);
     throw new Error("Chat not found");
@@ -174,6 +214,19 @@ const addToGroup = asyncHandler(async (req, res) => {
       },
     });
 
+  if (updatedChat.latestMessage) {
+    const key = Buffer.from(process.env.CRYPTOKEY, "hex");
+    const iv = Buffer.from(updatedChat.latestMessage.iv, "hex");
+    const decipher = crypto.createDecipheriv(algorithm, key, iv);
+    let decrypted = decipher.update(
+      updatedChat.latestMessage.content,
+      "hex",
+      "utf8"
+    );
+    decrypted += decipher.final("utf8");
+    updatedChat.latestMessage.content = decrypted;
+  }
+
   if (!updatedChat) {
     res.status(404);
     throw new Error("Chat Not Found");
@@ -199,6 +252,19 @@ const removeFromGroup = asyncHandler(async (req, res) => {
         select: "username image email",
       },
     });
+
+  if (updatedChat.latestMessage) {
+    const key = Buffer.from(process.env.CRYPTOKEY, "hex");
+    const iv = Buffer.from(updatedChat.latestMessage.iv, "hex");
+    const decipher = crypto.createDecipheriv(algorithm, key, iv);
+    let decrypted = decipher.update(
+      updatedChat.latestMessage.content,
+      "hex",
+      "utf8"
+    );
+    decrypted += decipher.final("utf8");
+    updatedChat.latestMessage.content = decrypted;
+  }
 
   if (!updatedChat) {
     res.status(404);
@@ -242,6 +308,21 @@ const search = asyncHandler(async (req, res) => {
       })
       .sort({ updatedAt: -1 });
 
+    chats.forEach((chat) => {
+      if (chat.latestMessage) {
+        const key = Buffer.from(process.env.CRYPTOKEY, "hex");
+        const iv = Buffer.from(chat.latestMessage.iv, "hex");
+        const decipher = crypto.createDecipheriv(algorithm, key, iv);
+        let decrypted = decipher.update(
+          chat.latestMessage.content,
+          "hex",
+          "utf8"
+        );
+        decrypted += decipher.final("utf8");
+        chat.latestMessage.content = decrypted;
+      }
+    });
+
     const user = await User.findOne({ email: searchTerm });
 
     res.status(200).json({ chats, user });
@@ -273,6 +354,19 @@ const addGroupAdmin = asyncHandler(async (req, res) => {
       },
     });
 
+  if (updatedChat.latestMessage) {
+    const key = Buffer.from(process.env.CRYPTOKEY, "hex");
+    const iv = Buffer.from(updatedChat.latestMessage.iv, "hex");
+    const decipher = crypto.createDecipheriv(algorithm, key, iv);
+    let decrypted = decipher.update(
+      updatedChat.latestMessage.content,
+      "hex",
+      "utf8"
+    );
+    decrypted += decipher.final("utf8");
+    updatedChat.latestMessage.content = decrypted;
+  }
+
   if (!updatedChat) {
     res.status(400);
     throw new Error("Chat not found");
@@ -303,6 +397,19 @@ const removeGroupAdmin = asyncHandler(async (req, res) => {
       },
     });
 
+  if (updatedChat.latestMessage) {
+    const key = Buffer.from(process.env.CRYPTOKEY, "hex");
+    const iv = Buffer.from(updatedChat.latestMessage.iv, "hex");
+    const decipher = crypto.createDecipheriv(algorithm, key, iv);
+    let decrypted = decipher.update(
+      updatedChat.latestMessage.content,
+      "hex",
+      "utf8"
+    );
+    decrypted += decipher.final("utf8");
+    updatedChat.latestMessage.content = decrypted;
+  }
+
   if (!updatedChat) {
     res.status(400);
     throw new Error("Chat not found");
@@ -332,6 +439,19 @@ const changeGroupImage = asyncHandler(async (req, res) => {
         select: "username image email",
       },
     });
+
+  if (updatedChat.latestMessage) {
+    const key = Buffer.from(process.env.CRYPTOKEY, "hex");
+    const iv = Buffer.from(updatedChat.latestMessage.iv, "hex");
+    const decipher = crypto.createDecipheriv(algorithm, key, iv);
+    let decrypted = decipher.update(
+      updatedChat.latestMessage.content,
+      "hex",
+      "utf8"
+    );
+    decrypted += decipher.final("utf8");
+    updatedChat.latestMessage.content = decrypted;
+  }
 
   if (!updatedChat) {
     res.status(400);
