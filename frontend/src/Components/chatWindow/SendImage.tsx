@@ -103,7 +103,7 @@ function SendImage(props: Props) {
   };
 
   return (
-    <div className="flex flex-col justify-between w-screen h-screen absolute top-0 left-0 bg-background">
+    <div className="flex flex-col justify-between w-screen h-screen absolute top-0 left-0 bg-background z-50">
       <div className="flex justify-end border-b">
         <Cross2Icon
           onClick={() => {

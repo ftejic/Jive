@@ -8,7 +8,7 @@ interface Props {
 
 function ImagePreview(props: Props) {
   return (
-    <div className="w-screen h-screen absolute top-0 left-0 bg-background/95">
+    <div className="w-screen h-screen absolute top-0 left-0 bg-background/95 z-50">
       <div className="flex justify-end">
         <Cross2Icon
           onClick={() => {

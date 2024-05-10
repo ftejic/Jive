@@ -133,8 +133,8 @@ function Chat() {
           />
         </div>
       )}
-      <div className="flex justify-between gap-3 md:hidden px-1 pb-1 mt-1 md:mt-0">
-        <div className="flex flex-1 bg-muted rounded-full px-3 gap-3">
+      <div className="flex justify-between items-end gap-3 md:hidden px-1 pb-1 mt-1 md:mt-0">
+        <div className="flex flex-1 items-end bg-muted rounded-3xl px-3 gap-3">
           <div className="flex items-center h-9">
             <FaceIcon
               onClick={() => setShowPicker((val: boolean) => !val)}
@@ -147,8 +147,8 @@ function Chat() {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={onEnterPress}
-            placeholder="Type a message"
-            className="outline-none resize-none w-full bg-transparent max-h-[136px] py-2 text-sm placeholder:text-muted-foreground"
+            placeholder="Message" 
+            className="ScrollBar outline-none resize-none w-full bg-transparent max-h-[136px] py-2 text-sm placeholder:text-muted-foreground"
           />
           <div className="flex items-center h-9">
             <label className="cursor-pointer">
@@ -199,7 +199,7 @@ function Chat() {
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={onEnterPress}
             placeholder="Type a message"
-            className="outline-none resize-none w-full rounded-md bg-muted-foreground/20 max-h-[184px] px-3 py-3 text-sm placeholder:text-muted-foreground"
+            className="ScrollBar outline-none resize-none w-full rounded-md bg-muted-foreground/20 max-h-[184px] px-3 py-3 text-sm placeholder:text-muted-foreground"
           />
           <Button
             onClick={handleSendMessage}

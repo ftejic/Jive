@@ -3,6 +3,8 @@ import { ChatState } from "../../Context/ChatProvider";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import ScrollableFeed from "react-scrollable-feed";
 import ImagePreview from "./ImagePreview";
+import Message from "./Message";
+import PhotoMessage from "./PhotoMessage";
 
 function Messages() {
   const chatState = ChatState();
@@ -11,7 +13,6 @@ function Messages() {
   const [isMobile, setIsMobile] = useState(false);
   const [imagePreviewVisible, setImagePreviewVisible] = useState(false);
   const [clickedImage, setClickedImage] = useState("");
-  const [preloadedImages, setPreloadedImages] = useState<string[]>([]);
 
   const maxMessageLengthDesktop = 750;
   const maxMessageLengthMobile = 500;
@@ -21,38 +22,13 @@ function Messages() {
     setIsMobile(isMobileDevice);
   }, []);
 
-  useEffect(() => {
-    if (chatState?.messages) {
-      const imagesToPreload = chatState.messages
-        .filter((message) => message.isImage)
-        .map((message) => message.content);
-      preloadImages(imagesToPreload);
-    }
-  }, [chatState?.messages]);
-
-  const preloadImages = (imageUrls: string[]) => {
-    const preloaded: string[] = [];
-    imageUrls.forEach((url) => {
-      const img = new Image();
-      img.src = url;
-      img.onload = () => {
-        preloaded.push(url);
-        console.log("Image preloaded:", url);
-        setPreloadedImages(preloaded);
-      };
-      img.onerror = () => console.error("Failed to preload image:", url);
-    });
-  };
-
   const maxMessageLength = isMobile
     ? maxMessageLengthMobile
     : maxMessageLengthDesktop;
 
-  console.log("Preloaded images:", preloadedImages);
-
   return (
     <>
-      <ScrollableFeed className="ScrollBar h-full py-2 px-4">
+      <ScrollableFeed className="ScrollBar ScrollableFeed h-full py-2 px-4">
         {chatState?.messages &&
           chatState.messages.map((message, index) => {
             const isFirstMessage =
@@ -112,143 +88,33 @@ function Messages() {
                     </Avatar>
                   )}
                   {!message.isImage && (
-                    <p
-                      className={`${
-                        isCurrentUser
-                          ? "bg-primary text-primary-foreground ml-auto"
-                          : "bg-muted"
-                      } ${
-                        !isCurrentUser && !isFirstMessage && isGroupChat
-                          ? "ml-9"
-                          : ""
-                      } ${
-                        isGroupChat && !isCurrentUser ? "pt-1" : "pt-2"
-                      } relative rounded-md pl-3 pr-[54px] pb-2 max-w-[75%] text-sm break-words`}
-                    >
-                      {(isFirstMessage || shouldRenderDate) && (
-                        <span
-                          className={`${
-                            isCurrentUser ? "-right-[6px]" : "-left-[6px]"
-                          } absolute top-0`}
-                        >
-                          <svg
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="4 6 7 4.5"
-                            width="16"
-                            height="10.29"
-                          >
-                            <path
-                              d="M4 6H11L7.5 10.5L4 6Z"
-                              fill={`${
-                                isCurrentUser
-                                  ? "hsl(210, 20%, 98%)"
-                                  : "hsl(215, 27.9%, 16.9%)"
-                              }`}
-                            ></path>
-                          </svg>
-                        </span>
-                      )}
-                      {isGroupChat && !isCurrentUser && isFirstMessage && (
-                        <>
-                          <span className="relative top-0 text-xs text-muted-foreground">
-                            {message.sender.username}
-                          </span>
-                          <br />
-                        </>
-                      )}
-                      {message.content.length > maxMessageLength
-                        ? !showFullMessage
-                          ? `${message.content.substring(
-                              0,
-                              maxMessageLength
-                            )}... `
-                          : `${message.content} `
-                        : message.content}
-                      {message.content.length > maxMessageLength ? (
-                        !showFullMessage ? (
-                          <span
-                            className="underline text-blue-700 cursor-pointer"
-                            onClick={() => setShowFullMessage(true)}
-                          >
-                            Read more
-                          </span>
-                        ) : (
-                          <span
-                            className="underline text-blue-700 cursor-pointer"
-                            onClick={() => setShowFullMessage(false)}
-                          >
-                            Collapse
-                          </span>
-                        )
-                      ) : (
-                        ""
-                      )}
-                      <span className="absolute text-xs text-muted-foreground bottom-1 right-3">
-                        {`${hours}:${minutes}`}
-                      </span>
-                    </p>
+                    <Message
+                      message={message}
+                      isGroupChat={isGroupChat}
+                      isCurrentUser={isCurrentUser}
+                      isFirstMessage={isFirstMessage}
+                      maxMessageLength={maxMessageLength}
+                      showFullMessage={showFullMessage}
+                      setShowFullMessage={setShowFullMessage}
+                      shouldRenderDate={shouldRenderDate}
+                      hours={hours}
+                      minutes={minutes}
+                    />
                   )}
-                  {message.isImage && preloadedImages.includes(message.content) && (
-                    <div
-                      onClick={() => {
-                        setClickedImage(message.content);
-                        setImagePreviewVisible(true);
-                      }}
-                      className={`${
-                        isCurrentUser
-                          ? "bg-primary text-primary-foreground ml-auto"
-                          : "bg-muted"
-                      } ${
-                        !isCurrentUser && !isFirstMessage && isGroupChat
-                          ? "ml-9"
-                          : ""
-                      } ${
-                        isGroupChat && !isCurrentUser ? "pt-1" : "pt-2"
-                      } relative rounded-md px-2 pb-6 max-w-[75%] cursor-pointer`}
-                    >
-                      {(isFirstMessage || shouldRenderDate) && (
-                        <span
-                          className={`${
-                            isCurrentUser ? "-right-[6px]" : "-left-[6px]"
-                          } absolute top-0`}
-                        >
-                          <svg
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="4 6 7 4.5"
-                            width="16"
-                            height="10.29"
-                          >
-                            <path
-                              d="M4 6H11L7.5 10.5L4 6Z"
-                              fill={`${
-                                isCurrentUser
-                                  ? "hsl(210, 20%, 98%)"
-                                  : "hsl(215, 27.9%, 16.9%)"
-                              }`}
-                            ></path>
-                          </svg>
-                        </span>
-                      )}
-                      {isGroupChat && !isCurrentUser && isFirstMessage && (
-                        <>
-                          <span className="relative top-0 text-xs text-muted-foreground">
-                            {message.sender.username}
-                          </span>
-                          <br />
-                        </>
-                      )}
-                      <img
-                        src={message.content}
-                        alt="Image"
-                        className="max-h-40 md:max-h-52"
+                  {message.isImage &&
+                    
+                      <PhotoMessage 
+                        message={message}
+                        isFirstMessage={isFirstMessage}
+                        isCurrentUser={isCurrentUser}
+                        isGroupChat={isGroupChat}
+                        setClickedImage={setClickedImage}
+                        setImagePreviewVisible={setImagePreviewVisible}
+                        shouldRenderDate={shouldRenderDate}
+                        hours={hours}
+                        minutes={minutes}
                       />
-                      <span className="absolute text-xs text-muted-foreground bottom-1 right-2">
-                        {`${hours}:${minutes}`}
-                      </span>
-                    </div>
-                  )}
+                    }
                 </div>
               </div>
             );
