@@ -79,6 +79,7 @@ function Chat() {
         setMessage("");
         socket.emit("new message", data);
         chatState?.setMessages((prev: Message[]) => [...prev, data]);
+        setShowPicker(false);
         if (chatState?.chats) {
           const chats = [...chatState.chats];
           const indexOfChat = chats.findIndex((c) => c._id === data.chat._id);
