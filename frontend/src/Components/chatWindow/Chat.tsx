@@ -116,6 +116,7 @@ function Chat() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setImage(e.target.files[0]);
+      e.target.value = "";
     }
   };
 
@@ -147,21 +148,21 @@ function Chat() {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={onEnterPress}
-            placeholder="Message" 
+            placeholder="Message"
             className="ScrollBar outline-none resize-none w-full bg-transparent max-h-[136px] py-2 text-sm placeholder:text-muted-foreground"
           />
           <div className="flex items-center h-9">
             <label className="cursor-pointer">
-            <div>
-              <ImageIcon className="w-5 h-5 text-foreground" />
-            </div>
-            <input
-              type="file"
-              className="hidden"
-              onChange={handleFileChange}
-              ref={fileInputRef}
-            />
-          </label>
+              <div>
+                <ImageIcon className="w-5 h-5 text-foreground" />
+              </div>
+              <input
+                type="file"
+                className="hidden"
+                onChange={handleFileChange}
+                ref={fileInputRef}
+              />
+            </label>
           </div>
         </div>
         <Button
