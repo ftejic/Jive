@@ -110,6 +110,14 @@ function GroupMembers(props: Props) {
   }, [searchValue]);
 
   const addUserToGroup = async (userId: string) => {
+    const isUserAlreadyMember = chatState?.selectedChat?.users.some(
+      (user) => user._id === userId
+    );
+
+    if (isUserAlreadyMember) {
+      return;
+    }
+
     try {
       const { data } = await axios.patch(
         "http://localhost:5000/api/chat/group-add",
@@ -126,7 +134,7 @@ function GroupMembers(props: Props) {
       );
 
       socket.emit("group change", data);
-      socket.emit("user add", {userId, newGroup: data});
+      socket.emit("user add", { userId, newGroup: data });
       chatState?.setSelectedChat(data);
       setSearchValue("");
       setSearchData(null);
@@ -152,7 +160,10 @@ function GroupMembers(props: Props) {
       );
 
       socket.emit("group change", data);
-      socket.emit("user remove", {userId: clickedUser?._id, chatId: chatState?.selectedChat?._id});
+      socket.emit("user remove", {
+        userId: clickedUser?._id,
+        chatId: chatState?.selectedChat?._id,
+      });
       chatState?.setSelectedChat(data);
     } catch (error) {
       console.log(error);
@@ -310,7 +321,10 @@ function GroupMembers(props: Props) {
               </ContextMenuContent>
             </ContextMenu>
           ) : (
-            <div key={user._id} className="relative pl-4 pr-20 cursor-context-menu hover:bg-muted/30">
+            <div
+              key={user._id}
+              className="relative pl-4 pr-20 cursor-context-menu hover:bg-muted/30"
+            >
               {isUserAdmin && (
                 <Badge
                   variant="outline"
