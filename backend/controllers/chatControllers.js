@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const Chat = require("../models/chatModel");
 const User = require("../models/userModel");
 const crypto = require("crypto");
+const Message = require("../models/messageModel");
 
 const algorithm = "aes-256-cbc";
 
@@ -29,6 +30,11 @@ const accessChat = asyncHandler(async (req, res) => {
       },
     });
 
+    if (!chat || chat.length === 0) {
+      await createChat(req, res);
+      return;
+    }
+
   if (chat[0].latestMessage) {
     const key = Buffer.from(process.env.CRYPTOKEY, "hex");
     const iv = Buffer.from(chat.latestMessage.iv, "hex");
@@ -38,7 +44,7 @@ const accessChat = asyncHandler(async (req, res) => {
     chat.latestMessage.content = decrypted;
   }
 
-  return res.send(chat[0]);
+  return res.send({chat: chat[0], created: false});
 });
 
 const getChats = asyncHandler(async (req, res) => {
@@ -99,7 +105,7 @@ const createChat = asyncHandler(async (req, res) => {
       "users",
       "-password"
     );
-    res.status(200).json(wholeChat);
+    res.status(200).json({chat: wholeChat, created: true});
   } catch (error) {
     res.status(400);
     throw new Error(error.message);
@@ -146,6 +152,8 @@ const deleteGroupChat = asyncHandler(async (req, res) => {
 
   try {
     await Chat.findByIdAndDelete(chatId);
+    await Message.deleteMany({chat: chatId});
+    
     res.status(200).send({ message: "Group deleted" });
   } catch (error) {
     res.status(400);

@@ -52,7 +52,7 @@ function Chat() {
 
     try {
       const { data } = await axios.get(
-        `http://localhost:5000/api/message/${chatState.selectedChat._id}`,
+        `${process.env.REACT_APP_SERVERURL}/api/message/${chatState.selectedChat._id}`,
         {
           withCredentials: true,
         }
@@ -67,7 +67,7 @@ function Chat() {
     if (message.length > 0) {
       try {
         const { data } = await axios.post(
-          "http://localhost:5000/api/message/",
+          `${process.env.REACT_APP_SERVERURL}/api/message/`,
           { content: message, chat: chatState?.selectedChat?._id },
           {
             headers: {

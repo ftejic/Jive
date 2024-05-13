@@ -62,7 +62,7 @@ function MainPanel(props: Props) {
       try {
         if (searchValue.length !== 0) {
           const { data } = await axios.post(
-            "http://localhost:5000/api/chat/search",
+            `${process.env.REACT_APP_SERVERURL}/api/chat/search`,
             { searchTerm: searchValue },
             {
               headers: {

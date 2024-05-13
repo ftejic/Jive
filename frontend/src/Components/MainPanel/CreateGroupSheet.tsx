@@ -59,7 +59,7 @@ function CreateGroupSheet(props: Props) {
       try {
         if (searchValue.length !== 0) {
           const { data } = await axios.post(
-            "http://localhost:5000/api/chat/search",
+            `${process.env.REACT_APP_SERVERURL}/api/chat/search`,
             { searchTerm: searchValue },
             {
               headers: {
@@ -96,7 +96,7 @@ function CreateGroupSheet(props: Props) {
 
     try {
       const { data } = await axios.post(
-        "http://localhost:5000/api/chat/group-create",
+        `${process.env.REACT_APP_SERVERURL}/api/chat/group-create`,
         {
           users: JSON.stringify(groupUsers),
           chatName: groupName,
@@ -114,7 +114,7 @@ function CreateGroupSheet(props: Props) {
 
         chatState.setChats(chats);
       }
-      socket.emit("new group", data);
+      socket.emit("new chat", data);
       chatState?.setSelectedChat(data);
       setGroupName("");
       setGroupUsers([]);

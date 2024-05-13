@@ -61,7 +61,7 @@ function ChatWindow(props: Props) {
   const deleteGroup = async () => {
     if (chatState?.selectedChat) {
       try {
-        await axios.delete("http://localhost:5000/api/chat/group-delete", {
+        await axios.delete(`${process.env.REACT_APP_SERVERURL}/api/chat/group-delete`, {
           data: {
             chatId: chatState.selectedChat._id,
           },
@@ -101,7 +101,7 @@ function ChatWindow(props: Props) {
         props.setOnlyAdminDialogVisible(true);
       } else {
         const { data } = await axios.patch(
-          "http://localhost:5000/api/chat/group-remove",
+          `${process.env.REACT_APP_SERVERURL}/api/chat/group-remove`,
           {
             chatId: chatState?.selectedChat?._id,
             userId: chatState?.user?._id,

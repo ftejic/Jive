@@ -51,11 +51,11 @@ function HomePage() {
 
   const getChats = async () => {
     try {
-      const { data } = await axios.get("http://localhost:5000/api/chat", {
+      const { data } = await axios.get(`${process.env.REACT_APP_SERVERURL}/api/chat`, {
         withCredentials: true,
       });
       chatState?.setChats(data);
-      setIsChatStateUpdated(true);
+      setIsChatStateUpdated(prev => !prev);
       // JOIN ALL ROOMS
       data.forEach((chat: Chat) => {
         chatState?.setJoinedRooms((prev: string[]) => [...prev, chat._id]);
@@ -70,7 +70,7 @@ function HomePage() {
     const getUser = async () => {
       try {
         const { data } = await axios.get(
-          "http://localhost:5000/api/user/check-auth",
+          `${process.env.REACT_APP_SERVERURL}/api/user/check-auth`,
           {
             withCredentials: true,
           }
@@ -105,6 +105,8 @@ function HomePage() {
         const indexOfChat = chats.findIndex(
           (c) => c._id === newMessage.chat._id
         );
+        
+        console.log(chats[indexOfChat]);
         chats[indexOfChat].latestMessage = newMessage;
 
         const updatedChat = chats.splice(indexOfChat, 1)[0];
@@ -129,7 +131,7 @@ function HomePage() {
       }
     };
 
-    const onGroupCreate = () => {
+    const onChatCreated = () => {
       getChats();
     };
 
@@ -169,7 +171,7 @@ function HomePage() {
     };
 
     socket.on("message received", onMessageRecived);
-    socket.on("group created", onGroupCreate);
+    socket.on("chat created", onChatCreated);
     socket.on("group changed", onGroupChange);
     socket.on("group deleted", onGroupDelete);
     socket.on("user removed", onUserRemove);
@@ -177,7 +179,7 @@ function HomePage() {
 
     return () => {
       socket.off("message received", onMessageRecived);
-      socket.off("group created", onGroupCreate);
+      socket.off("chat created", onChatCreated);
       socket.off("group changed", onGroupChange);
       socket.off("group deleted", onGroupDelete);
       socket.off("user removed", onUserRemove);

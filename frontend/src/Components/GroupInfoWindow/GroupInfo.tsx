@@ -34,7 +34,7 @@ function GroupInfo(props: Props) {
   const changeGroupName = async () => {
     try {
       const { data } = await axios.patch(
-        "http://localhost:5000/api/chat/group-rename",
+        `${process.env.REACT_APP_SERVERURL}/api/chat/group-rename`,
         {
           chatId: chatState?.selectedChat?._id,
           chatName: props.groupName,
@@ -113,7 +113,7 @@ function GroupInfo(props: Props) {
             }
 
             const { data } = await axios.patch(
-              "http://localhost:5000/api/chat/group-change-image",
+              `${process.env.REACT_APP_SERVERURL}/api/chat/group-change-image`,
               {
                 chatId: chatState?.selectedChat?._id,
                 image: downloadURL,

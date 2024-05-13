@@ -63,7 +63,7 @@ function SignUpPage() {
     const { username, email, password } = values;
     try {
       await axios.post(
-        "http://localhost:5000/api/user/sign-up",
+        `${process.env.REACT_APP_SERVERURL}/api/user/sign-up`,
         { username, email, password },
         {
           headers: {

@@ -74,12 +74,12 @@ io.on("connection", async (socket) => {
     socket.to(newMessage.chat._id).emit("message received", newMessage);
   });
 
-  socket.on("new group", (newGroup) => {
-    newGroup.users.map((user) => {
+  socket.on("new chat", (newChat) => {
+    newChat.users.map((user) => {
       if (connectionMap[user._id]) {
         connectionMap[user._id].forEach((socketId) => {
-          io.sockets.sockets.get(socketId).join(newGroup._id);
-          socket.to(socketId).emit("group created", newGroup);
+          io.sockets.sockets.get(socketId).join(newChat._id);
+          socket.to(socketId).emit("chat created", newChat);
         });
       }
     });

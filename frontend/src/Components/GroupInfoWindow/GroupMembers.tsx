@@ -73,7 +73,7 @@ function GroupMembers(props: Props) {
       try {
         if (searchValue.length !== 0) {
           const { data } = await axios.post(
-            "http://localhost:5000/api/chat/search",
+            `${process.env.REACT_APP_SERVERURL}/api/chat/search`,
             { searchTerm: searchValue },
             {
               headers: {
@@ -120,7 +120,7 @@ function GroupMembers(props: Props) {
 
     try {
       const { data } = await axios.patch(
-        "http://localhost:5000/api/chat/group-add",
+        `${process.env.REACT_APP_SERVERURL}/api/chat/group-add`,
         {
           chatId: chatState?.selectedChat?._id,
           userId,
@@ -146,7 +146,7 @@ function GroupMembers(props: Props) {
   const removeUserFromGroup = async () => {
     try {
       const { data } = await axios.patch(
-        "http://localhost:5000/api/chat/group-remove",
+        `${process.env.REACT_APP_SERVERURL}/api/chat/group-remove`,
         {
           chatId: chatState?.selectedChat?._id,
           userId: clickedUser?._id,
@@ -173,7 +173,7 @@ function GroupMembers(props: Props) {
   const addAdmin = async () => {
     try {
       const { data } = await axios.patch(
-        "http://localhost:5000/api/chat/group-add-admin",
+        `${process.env.REACT_APP_SERVERURL}/api/chat/group-add-admin`,
         {
           chatId: chatState?.selectedChat?._id,
           userId: clickedUser?._id,
@@ -196,7 +196,7 @@ function GroupMembers(props: Props) {
   const removeAdmin = async (userId: string) => {
     try {
       const { data } = await axios.patch(
-        "http://localhost:5000/api/chat/group-remove-admin",
+        `${process.env.REACT_APP_SERVERURL}/api/chat/group-remove-admin`,
         {
           chatId: chatState?.selectedChat?._id,
           userId,

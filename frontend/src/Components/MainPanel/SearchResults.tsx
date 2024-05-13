@@ -3,6 +3,7 @@ import { ChatState } from "../../Context/ChatProvider";
 import { getSender } from "../../config/chatLogics";
 import ChatCard from "./ChatCard";
 import UserCard from "./UserCard";
+import { socket } from "../../socket";
 
 interface User {
   _id: string;
@@ -48,8 +49,8 @@ function SearchResults(props: Props) {
 
   const createChat = async (userId: string | undefined) => {
     try {
-      const { data }: { data: Chat } = await axios.post(
-        "http://localhost:5000/api/chat/",
+      const { data }: { data: {chat: Chat, created: boolean} } = await axios.post(
+        `${process.env.REACT_APP_SERVERURL}/api/chat/`,
         { userId },
         {
           headers: { "Content-Type": "application/json" },
@@ -57,22 +58,26 @@ function SearchResults(props: Props) {
         }
       );
 
-      const sender = getSender(chatState?.user, data.users);
+      const sender = getSender(chatState?.user, data.chat.users);
 
       chatState?.setChats((prev: Chat[]) => {
-        if (!prev.some((chat) => chat._id === data._id)) {
-          return [...prev, data];
+        if (!prev.some((chat) => chat._id === data.chat._id)) {
+          return [...prev, data.chat];
         } else {
           return prev;
         }
       });
       chatState?.setSelectedChat({
-        ...data,
+        ...data.chat,
         chatName: sender.username,
         sender,
       });
       props.setSearchValue("");
       props.setSearchVisible(false);
+
+      if(data.created) {
+        socket.emit("new chat", data.chat);
+      }
     } catch (error) {
       console.log(error);
     }

@@ -30,7 +30,7 @@ function Header(props: Props) {
 
   const logout = async () => {
     try {
-      await axios.delete("http://localhost:5000/api/user/sign-out", {
+      await axios.delete(`${process.env.REACT_APP_SERVERURL}/api/user/sign-out`, {
         withCredentials: true,
       });
     } catch (error) {

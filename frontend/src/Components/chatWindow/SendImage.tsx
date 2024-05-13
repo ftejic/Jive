@@ -74,7 +74,7 @@ function SendImage(props: Props) {
           getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
             try {
               const { data } = await axios.post(
-                "http://localhost:5000/api/message/",
+                `${process.env.REACT_APP_SERVERURL}/api/message/`,
                 {
                   content: downloadURL,
                   chat: chatState?.selectedChat?._id,

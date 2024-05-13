@@ -36,7 +36,7 @@ function Settings(props: Props) {
     if (username.length > 3) {
       if (username !== chatState?.user?.username) {
         const { data } = await axios.patch(
-          "http://localhost:5000/api/user/change-username",
+          `${process.env.REACT_APP_SERVERURL}/api/user/change-username`,
           {
             username,
           },
@@ -109,7 +109,7 @@ function Settings(props: Props) {
             }
 
             const { data } = await axios.patch(
-              "http://localhost:5000/api/user/change-profile-image",
+              `${process.env.REACT_APP_SERVERURL}/api/user/change-profile-image`,
               {
                 image: downloadURL,
               },
