@@ -48,15 +48,12 @@ function SignInPage() {
        `${process.env.REACT_APP_SERVERURL}/api/user/sign-in`,
         { email, password },
         {
+          withCredentials: true,
           headers: {
             "Content-Type": "application/json",
           },
         }
       );
-
-      chatState?.setCookie("jive.session-token", data.sessionToken, {
-        maxAge: 8 * 60 * 60,
-      });
 
       navigate("/");
     } catch (error) {

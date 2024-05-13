@@ -61,6 +61,13 @@ const authUser = asyncHandler(async (req, res) => {
     const session = await createSession(user._id);
 
     if (session) {
+      res.cookie("jive.session-token", session._id, {
+        path: "/",
+        expiresIn: "8h",
+        httpOnly: true,
+        secure: true,
+        sameSite: "none"
+      });
       return res.status(201).json({ sessionToken: session._id });
     } else {
       res.status(400);
