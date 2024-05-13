@@ -15,7 +15,7 @@ dotenv.config();
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "http://localhost:3000https://jive-frontend.onrender.com",
     credentials: true,
   })
 );
@@ -42,7 +42,7 @@ const server = app.listen(port, () => {
 const io = require("socket.io")(server, {
   pingTimeout: 60000,
   cors: {
-    origin: "http://localhost:3000",
+    origin: "https://jive-frontend.onrender.com",
   },
 });
 
