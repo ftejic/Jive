@@ -15,7 +15,7 @@ dotenv.config();
 
 app.use(
   cors({
-    origin: "http://localhost:3000https://jive-frontend.onrender.com",
+    origin: "https://jive-frontend.onrender.com",
     credentials: true,
   })
 );
