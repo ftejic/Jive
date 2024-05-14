@@ -111,7 +111,12 @@ const signOut = asyncHandler(async (req, res) => {
     try {
       await Session.findByIdAndDelete({ _id: sessionToken });
       res
-        .clearCookie("jive.session-token")
+        .clearCookie("jive.session-token", {
+          path: "/",
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
+        })
         .status(200)
         .send({ message: "Signed out" });
     } catch (error) {
