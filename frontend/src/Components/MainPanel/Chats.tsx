@@ -38,8 +38,6 @@ interface Props {
 function Chats(props: Props) {
   const chatState = ChatState();
 
-
-
   return (
     <div>
       {chatState?.chats ? (
@@ -74,7 +72,11 @@ function Chats(props: Props) {
                 latestMessage={chat.latestMessage ? chat.latestMessage : null}
                 image={chat.image}
                 sender={sender}
-                dateTime={props.getTime(chat.latestMessage?.updatedAt ? chat.latestMessage?.updatedAt : null)}
+                dateTime={props.getTime(
+                  chat.latestMessage?.updatedAt
+                    ? chat.latestMessage?.updatedAt
+                    : null
+                )}
               />
             </div>
           );

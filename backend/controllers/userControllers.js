@@ -63,10 +63,10 @@ const authUser = asyncHandler(async (req, res) => {
     if (session) {
       res.cookie("jive.session-token", session._id, {
         path: "/",
-        expiresIn: "8h",
+        maxAge: 8 * 60 * 60 * 1000,
         httpOnly: true,
         secure: true,
-        sameSite: "none"
+        sameSite: "none",
       });
       return res.status(201).json({ sessionToken: session._id });
     } else {
@@ -110,7 +110,10 @@ const signOut = asyncHandler(async (req, res) => {
   if (sessionToken) {
     try {
       await Session.findByIdAndDelete({ _id: sessionToken });
-      res.status(200).send({ message: "Signed out" });
+      res
+        .clearCookie("jive.session-token")
+        .status(200)
+        .send({ message: "Signed out" });
     } catch (error) {
       res.status(400).send({ message: "Sign out failed" });
     }

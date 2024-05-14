@@ -36,7 +36,6 @@ function Header(props: Props) {
     } catch (error) {
       console.log(`Log out failed: ${error}`);
     } finally {
-      chatState?.removeCookie("jive.session-token");
       chatState?.setUser(null);
       chatState?.setSelectedChat(null);
       navigate("/sign-in");

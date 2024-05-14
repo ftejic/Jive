@@ -44,9 +44,11 @@ function Chat() {
   const [image, setImage] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
-
+  const textAreaRef2 = useRef<HTMLTextAreaElement>(null);
+  
   useAutosizeTextArea(textAreaRef.current, message);
-
+  useAutosizeTextArea(textAreaRef2.current, message);
+  
   const fetchMessages = async () => {
     if (!chatState?.selectedChat) return;
 
@@ -135,7 +137,7 @@ function Chat() {
           />
         </div>
       )}
-      <div className="flex justify-between items-end gap-3 md:hidden px-1 pb-1 mt-1 md:mt-0">
+      <div className="flex justify-between items-end gap-3 md:hidden px-1 mb-3 mt-1 md:mt-0">
         <div className="flex flex-1 items-end bg-muted rounded-3xl px-3 gap-3">
           <div className="flex items-center h-9">
             <FaceIcon
@@ -196,7 +198,7 @@ function Chat() {
         <div className="w-full flex items-end gap-3">
           <textarea
             rows={1}
-            ref={textAreaRef}
+            ref={textAreaRef2}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={onEnterPress}

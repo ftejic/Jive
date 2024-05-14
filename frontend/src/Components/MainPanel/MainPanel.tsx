@@ -142,7 +142,7 @@ function MainPanel(props: Props) {
           />
         </div>
       </form>
-      <ScrollArea className="h-full border">
+      <ScrollArea className="h-full md:border">
         {searchValue.length > 0 ? (
           <SearchResults
             searchData={searchData}
