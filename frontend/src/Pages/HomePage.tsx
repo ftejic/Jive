@@ -38,7 +38,7 @@ interface Chat {
 function HomePage() {
   const chatState = ChatState();
   const navigate = useNavigate();
-
+  const [permission, setPermission] = useState("default");
   const [userInfoWindowVisible, setUserInfoWindowVisible] = useState(false);
   const [groupInfoWindowVisible, setGroupInfoWindowVisible] = useState(false);
   const [isChatStateUpdated, setIsChatStateUpdated] = useState(false);
@@ -51,11 +51,14 @@ function HomePage() {
 
   const getChats = async () => {
     try {
-      const { data } = await axios.get(`${process.env.REACT_APP_SERVERURL}/api/chat`, {
-        withCredentials: true,
-      });
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_SERVERURL}/api/chat`,
+        {
+          withCredentials: true,
+        }
+      );
       chatState?.setChats(data);
-      setIsChatStateUpdated(prev => !prev);
+      setIsChatStateUpdated((prev) => !prev);
       // JOIN ALL ROOMS
       data.forEach((chat: Chat) => {
         chatState?.setJoinedRooms((prev: string[]) => [...prev, chat._id]);
@@ -82,6 +85,19 @@ function HomePage() {
           }
         });
         chatState?.setUser(data.user);
+        
+        const requestNotificationPermission = async () => {
+          const permission = await Notification.requestPermission();
+          console.log('Permission:', permission);
+        };
+    
+        const initNotificationPermission = async () => {
+          if (Notification.permission !== 'granted') {
+            await requestNotificationPermission();
+          }
+        };
+    
+        initNotificationPermission();
       } catch (error) {
         console.log(error);
         navigate("/sign-in");
@@ -105,8 +121,7 @@ function HomePage() {
         const indexOfChat = chats.findIndex(
           (c) => c._id === newMessage.chat._id
         );
-        
-        console.log(chats[indexOfChat]);
+
         chats[indexOfChat].latestMessage = newMessage;
 
         const updatedChat = chats.splice(indexOfChat, 1)[0];
@@ -122,7 +137,22 @@ function HomePage() {
         !chatState?.selectedChat ||
         chatState.selectedChat._id !== newMessage.chat._id
       ) {
-        // ADD NOTIFICATION
+        if ('serviceWorker' in navigator && 'PushManager' in window) {
+          navigator.serviceWorker.ready
+            .then(registration => {
+              registration.showNotification('New Message', {
+                body: `You have a new message ${
+                  newMessage.chat.isGroupChat
+                    ? "in " + newMessage.chat.chatName
+                    : "from " + newMessage.sender.username
+                }`,
+                icon: '/logo192.png',
+              });
+            })
+            .catch(error => {
+              console.error('Error sending notification:', error);
+            });
+        }
       } else {
         chatState?.setMessages((prevMessages: Message[]) => [
           ...prevMessages,
