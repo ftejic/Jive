@@ -45,10 +45,10 @@ function Chat() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const textAreaRef2 = useRef<HTMLTextAreaElement>(null);
-  
+
   useAutosizeTextArea(textAreaRef.current, message);
   useAutosizeTextArea(textAreaRef2.current, message);
-  
+
   const fetchMessages = async () => {
     if (!chatState?.selectedChat) return;
 
@@ -118,7 +118,13 @@ function Chat() {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      setImage(e.target.files[0]);
+      const selectedFile = e.target.files[0]
+      if (selectedFile.type.startsWith("image/")) {
+        setImage(selectedFile);
+        setImage(e.target.files[0]);
+      } else {
+        alert("Please select a valid image file.");
+      }
       e.target.value = "";
     }
   };
@@ -161,6 +167,7 @@ function Chat() {
               </div>
               <input
                 type="file"
+                accept="image/*"
                 className="hidden"
                 onChange={handleFileChange}
                 ref={fileInputRef}
@@ -189,6 +196,7 @@ function Chat() {
             </div>
             <input
               type="file"
+              accept="image/*"
               className="hidden"
               onChange={handleFileChange}
               ref={fileInputRef}
