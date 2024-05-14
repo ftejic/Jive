@@ -56,7 +56,7 @@ function SendImage(props: Props) {
       uploadTask.on(
         "state_changed",
         (snapshot) => {
-          setProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+          setProgress(Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100));
           console.log(`Upload is ${progress}% done`);
           switch (snapshot.state) {
             case "paused":

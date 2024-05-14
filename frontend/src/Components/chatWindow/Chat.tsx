@@ -177,7 +177,7 @@ function Chat() {
         </div>
         <Button
           onClick={handleSendMessage}
-          className="bg-foreground rounded-full p-0 w-9 h-9 hover:bg-transparent"
+          className="bg-foreground rounded-full p-0 w-9 h-9"
         >
           <PaperPlaneIcon className="w-5 h-5 text-background" />
         </Button>
